@@ -11,7 +11,34 @@ import {
 import { storefrontAuth } from "../shared/auth-client.js";
 import { shopConfig, isUnconfigured } from "./shop-config.js";
 
+/* Petino's shared visual shell is loaded by the shared application module so
+   every storefront route stays in the same design system. */
+if (!document.body?.classList.contains("petino-home")) {
+  const theme = document.createElement("link");
+  theme.rel = "stylesheet";
+  theme.href = "petino-theme.css";
+  document.head.append(theme);
+}
+
 let CAT = null;
+
+function initPetinoChrome() {
+  if (document.body.classList.contains("petino-home")) return;
+  document.body.classList.add("petino-shell");
+  document.querySelectorAll(".rail,.sdbar").forEach((el) => { el.hidden = true; });
+  document.querySelectorAll(".topbar__long").forEach((el) => { el.textContent = "Free delivery on happy orders over $50 · Thoughtful essentials for every pet"; });
+  document.querySelectorAll(".topbar__short").forEach((el) => { el.textContent = "Made for happy pets"; });
+  document.querySelectorAll(".logo").forEach((el) => { el.innerHTML = '<span class="pet-mark">P</span>Petino<span class="pet-dot">.</span>'; });
+  document.querySelectorAll(".hdr .nav").forEach((nav) => {
+    nav.innerHTML = '<a href="index.html">Home</a><a href="shop.html">Shop</a><a href="shop.html?cat=cat-essentials">Cats</a><a href="shop.html?cat=rabbit-essentials">Rabbits</a><a href="/blog">Pet journal</a><a href="/about-us">About us</a>';
+  });
+  document.querySelectorAll(".ft__col h4").forEach((h) => {
+    if (h.textContent.trim() === "Client care") h.textContent = "Petino care";
+  });
+  document.querySelectorAll("[data-search-input]").forEach((input) => {
+    input.placeholder = "Search food, toys and pet care";
+  });
+}
 
 /* ---------- Shared card ---------- */
 export function cardHTML(p) {
@@ -546,6 +573,7 @@ function initDeepLink() {
 
 /* ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded", async () => {
+  initPetinoChrome();
   // First, so the warning is up before the catalogue resolves. Awaited: the
   // banner shifts the page, and shifting it after the reader has started is
   // worse than a few milliseconds of delay.

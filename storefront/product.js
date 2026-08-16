@@ -13,11 +13,10 @@ import { cardHTML, esc, initAcc, openLightbox } from "./app.js";
 /* Spec keys worth surfacing, in reading order. Only those the record actually
    holds are rendered; nothing is filled in. */
 const SPEC_ORDER = [
-  "Movement Type", "Movement", "Power Reserve", "Material", "Case Material",
-  "Case diameter", "Dial Size", "Dial Color", "Water Resistance",
-  "Strap Material", "Band Material", "Band Color", "Band width",
-  "Bezel material", "Clasp", "Style", "Model number", "Item weight",
-  "Special Features", "Design Style",
+  "Product Type", "Intended Pet", "Primary Material", "Base Material",
+  "Accent Material", "Main Colors", "Main Color", "Shape", "Activity",
+  "Difficulty", "Surface", "Placement", "Mounting", "Access", "Care",
+  "Included Items", "Size", "Weight",
 ];
 
 function specRows(spec) {
@@ -146,7 +145,7 @@ async function initPDP(cat) {
 
       ${showSwatches ? `
       <p class="eyebrow mb0" style="margin-bottom:14px">Case &amp; strap</p>
-      <div class="swatches" role="radiogroup" aria-label="Case and strap finish">
+      <div class="swatches" role="radiogroup" aria-label="Available product options">
         ${variants.map((v, i) => `
           <button class="sw${v.image ? " sw--img" : ""}${i ? "" : " is-on"}" type="button" role="radio"
                   aria-checked="${i ? "false" : "true"}"
@@ -185,7 +184,7 @@ async function initPDP(cat) {
           <div class="acc__bd">
             ${rows.length ? `<table class="spectable"><tbody>
               ${rows.map(([k, v]) => `<tr><th scope="row">${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}
-              <tr><th scope="row">Reference</th><td>${p.id}</td></tr>
+              <tr><th scope="row">Product ID</th><td>${p.id}</td></tr>
             </tbody></table>` : `<p class="mt0 mb0">No specifications are recorded for REF. ${p.id}.</p>`}
           </div>
         </div>

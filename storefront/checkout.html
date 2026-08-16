@@ -25,9 +25,10 @@
     <link rel="preconnect" href="https://cdn.selldone.com" />
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="petino-theme.css" />
     <script type="module" src="checkout.js"></script>
   </head>
-  <body>
+  <body class="petino-shell">
 
     <a class="skip" href="#main">Skip to content</a>
 
@@ -43,7 +44,7 @@
       <!-- Checkout runs its own stripped header: no navigation, no bag, no exits. -->
       <header class="cohdr">
         <div class="wrap cohdr__in">
-          <a class="logo" href="index.html" style="text-align:left">Watch<span>i</span>no</a>
+          <a class="logo" href="index.html" style="text-align:left"><span class="pet-mark">P</span>Petino<span class="pet-dot">.</span></a>
           <span class="secure">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
             Secure checkout
@@ -109,8 +110,8 @@
                   <div class="fld">
                     <label for="ctry">Country</label>
                     <select id="ctry" autocomplete="country-name">
-                      <option>Switzerland</option><option>Germany</option>
-                      <option>United Kingdom</option><option>United States</option>
+                      <option>United States</option><option>United Kingdom</option>
+                      <option>Canada</option><option>Germany</option><option>Switzerland</option>
                       <option>United Arab Emirates</option>
                     </select>
                   </div>
@@ -120,13 +121,13 @@
                   <legend>Delivery</legend>
                   <label class="opt">
                     <input type="radio" name="ship" value="courier" data-label="Insured courier" checked>
-                    <span><b>Insured courier</b><br><span class="cap">2–4 working days, signature required</span></span>
+                    <span><b>Tracked delivery</b><br><span class="cap">2–4 working days with live tracking</span></span>
                     <span class="price">Included</span>
                   </label>
                   <label class="opt">
                     <input type="radio" name="ship" value="hand" data-label="Hand delivery">
-                    <span><b>Hand delivery</b><br><span class="cap" data-brand-cities-line>By appointment</span></span>
-                    <span class="price">$450</span>
+                    <span><b>Express delivery</b><br><span class="cap" data-brand-cities-line>Next working day where available</span></span>
+                    <span class="price">$15</span>
                   </label>
                 </fieldset>
 
@@ -156,7 +157,7 @@
                 <p class="done__ref" id="doneref">—</p>
                 <div class="tickrule" style="margin:0 0 28px"></div>
                 <p class="cap" style="margin-bottom:24px">This is a demonstration storefront. No payment was taken and no order was created in Selldone.</p>
-                <a class="btn btn--line" href="index.html">Back to the collection</a>
+                <a class="btn btn--line" href="shop.html">Back to the shop</a>
               </div>
             </div>
 

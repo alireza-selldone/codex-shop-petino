@@ -153,7 +153,7 @@ async function init() {
     </label>`).join("") + `
     <label class="opt">
       <input type="radio" name="pay" value="transfer" data-label="Bank transfer">
-      <span><b>Bank transfer</b><br><span class="cap">Watch ships once funds clear</span></span>
+      <span><b>Bank transfer</b><br><span class="cap">Your pet essentials ship once funds clear</span></span>
     </label>`;
 
   const note = $("#gatewaynote");
