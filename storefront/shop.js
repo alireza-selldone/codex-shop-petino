@@ -77,12 +77,12 @@ function initShop(cat) {
       String(y.raw.created_at || "").localeCompare(String(x.raw.created_at || "")) || y.id - x.id);
 
     const one = picked.length === 1 ? catOf(cat, picked[0]) : null;
-    title.textContent = one ? one.name : "All references";
+    title.textContent = one ? one.name : "All products";
     if (intro) intro.textContent = one ? one.blurb
-      : `${cat.products.length} references across ${cat.cats.length} collections.`;
-    count.textContent = `${list.length} ${list.length === 1 ? "reference" : "references"}`;
+      : `${cat.products.length} products across ${cat.cats.length} categories.`;
+    count.textContent = `${list.length} ${list.length === 1 ? "product" : "products"}`;
     if (shown > list.length) shown = Math.max(PAGE, Math.ceil(list.length / PAGE) * PAGE);
-    document.title = `${one ? one.name : "All references"} — Watchino`;
+    document.title = `${one ? one.name : "All products"} — Petino`;
 
     if (list.length) {
       const page = list.slice(0, shown);

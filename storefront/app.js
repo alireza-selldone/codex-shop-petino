@@ -212,7 +212,7 @@ function fillNav() {
       <a class="mega__item" href="shop.html?cat=${c.slug}">
         <img src="${c.image}" alt="${esc(c.name)} — ${esc(c.heroName)}" loading="lazy" width="200" height="200">
         <b>${esc(c.name)}</b>
-        <span class="cap">${c.count} references</span>
+        <span class="cap">${c.count} products</span>
       </a>`).join("");
   }
 
@@ -223,9 +223,9 @@ function fillNav() {
 
   document.querySelectorAll("[data-drawer-nav]").forEach((nav) => {
     nav.innerHTML =
-      `<a href="shop.html">All references<small>${CAT.products.length} in the collection</small></a>` +
+      `<a href="shop.html">All products<small>${CAT.products.length} in the collection</small></a>` +
       CAT.cats.map((c) =>
-        `<a href="shop.html?cat=${c.slug}">${esc(c.name)}<small>${c.count} references · from ${money(c.from)}</small></a>`).join("") +
+        `<a href="shop.html?cat=${c.slug}">${esc(c.name)}<small>${c.count} products · from ${money(c.from)}</small></a>`).join("") +
       `<a href="index.html#service">Client care</a>`;
   });
 }
@@ -375,7 +375,7 @@ function initSearch() {
     const q = norm(input.value).trim();
     if (!q) {
       out.innerHTML = "";
-      count.textContent = `${CAT.products.length} references in the collection`;
+      count.textContent = `${CAT.products.length} products in the collection`;
       return;
     }
     // Every term must appear somewhere in the record, so "molino gold" narrows
@@ -386,7 +386,7 @@ function initSearch() {
       return terms.every((t) => hay.includes(t));
     });
 
-    count.textContent = hits.length === 1 ? "1 reference" : `${hits.length} references`;
+    count.textContent = hits.length === 1 ? "1 product" : `${hits.length} products`;
     out.innerHTML = hits.length
       ? hits.map((p) => `<a class="sres" href="product.html?id=${p.id}">
           <span class="sres__art"><img src="${p.image}" alt="" loading="lazy" width="56" height="56"></span>
@@ -395,7 +395,7 @@ function initSearch() {
         </a>`).join("")
       : `<div class="sempty">
            <p class="h3" style="margin-bottom:6px">Nothing matches “${esc(input.value.trim())}”</p>
-           <p class="cap">Try a maker, a collection, or part of a reference name.</p>
+           <p class="cap">Try a category, product type, or part of a product name.</p>
          </div>`;
   }
 

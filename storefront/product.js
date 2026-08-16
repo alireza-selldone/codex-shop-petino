@@ -49,12 +49,12 @@ function ratingBlock(p) {
         <p class="cap mb0">No ratings recorded yet</p>
       </div>
       <div class="rateempty">
-        <p class="h3">This reference has not been rated</p>
+        <p class="h3">This product has not been rated</p>
         <p class="cap mb0" style="max-width:38ch">Ratings appear here once verified owners submit them through Selldone. Nothing has been published for REF. ${p.id}.</p>
       </div>
       <div>
-        <p class="lede" style="margin-bottom:16px">Every movement is opened, timed on six positions and certified by the workshop before dispatch, whether or not anyone has written about it.</p>
-        <p class="ref mb0">Watchino workshop</p>
+        <p class="lede" style="margin-bottom:16px">Verified customer ratings will appear here as they are submitted.</p>
+        <p class="ref mb0">Petino customers</p>
       </div>
     </div>`;
   }
@@ -74,7 +74,7 @@ function ratingBlock(p) {
       <p class="cap mb0">Aggregated by Selldone from verified purchases.</p>
     </div>
     <div>
-      <p class="lede" style="margin-bottom:16px">Individual written reviews are not published for this reference.</p>
+      <p class="lede" style="margin-bottom:16px">Individual written reviews are not published for this product.</p>
       <p class="ref mb0">REF. ${p.id}</p>
     </div>
   </div>`;
@@ -89,14 +89,14 @@ async function initPDP(cat) {
 
   if (!p) {
     root.innerHTML = `<div class="notfound">
-      <p class="h1" style="margin-bottom:14px">No such reference</p>
-      <p class="lede" style="margin:0 auto 28px">${id ? `REF. ${esc(id)} is not in the collection.` : "No reference was requested."}</p>
-      <a class="btn" href="shop.html">Browse all references</a></div>`;
-    document.title = "Reference not found — Watchino";
+      <p class="h1" style="margin-bottom:14px">Product not found</p>
+      <p class="lede" style="margin:0 auto 28px">${id ? `Product ${esc(id)} is not in the catalogue.` : "No product was requested."}</p>
+      <a class="btn" href="shop.html">Browse all products</a></div>`;
+    document.title = "Product not found — Petino";
     return;
   }
 
-  document.title = `${p.name} — Watchino`;
+  document.title = `${p.name} — Petino`;
   const c = catOf(cat, p.cat);
   const others = cat.products.filter((x) => x.cat === p.cat && x.id !== p.id);
 
@@ -161,7 +161,7 @@ async function initPDP(cat) {
       <p class="swpos" data-sw-pos>Finish 1 of ${variants.length}</p>
       ` : `
       <p class="eyebrow mb0" style="margin-bottom:8px">Case &amp; strap</p>
-      <p class="cap" style="margin-bottom:4px">A single finish is recorded for this reference.</p>
+      <p class="cap" style="margin-bottom:4px">A single option is recorded for this product.</p>
       `}
 
       <p class="stock" data-stock><i class="dot"></i> ${(showSwatches ? stockOf(variants[0]) : p.qty) > 0 ? `${showSwatches ? stockOf(variants[0]) : p.qty} in stock &middot; ships within 3 working days` : "Currently unavailable"}</p>
@@ -177,7 +177,7 @@ async function initPDP(cat) {
           <button class="acc__hd" type="button" aria-expanded="true">Description <span class="acc__ico">–</span></button>
           <div class="acc__bd">
             <p class="mt0">${esc(cat.cats.find((c) => c.slug === p.cat)?.blurb || "")}</p>
-            <p class="cap mb0">Collection description. Selldone holds no per-reference description for this product.</p>
+            <p class="cap mb0">Category description. Selldone holds no individual description for this product.</p>
           </div>
         </div>
         <div class="acc">
@@ -195,7 +195,7 @@ async function initPDP(cat) {
         </div>
         <div class="acc" style="border-bottom:1px solid var(--rule)">
           <button class="acc__hd" type="button" aria-expanded="false">Authentication <span class="acc__ico">+</span></button>
-          <div class="acc__bd"><p class="mt0 mb0">Opened, timed on six positions, and certified by our workshop before dispatch.</p></div>
+          <div class="acc__bd"><p class="mt0 mb0">Prepared for dispatch from the Petino catalogue with live stock status.</p></div>
         </div>
       </div>
     </div>

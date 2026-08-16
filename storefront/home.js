@@ -13,7 +13,7 @@ import { cardHTML, esc } from "./app.js";
    Ported verbatim from the approved prototype.
    ========================================================================== */
 const SCENES = {
-facade:`<svg viewBox="0 0 760 620" role="img" aria-label="The Watchino shopfront at dusk, drawn as an engraved line illustration">
+facade:`<svg viewBox="0 0 760 620" role="img" aria-label="The Petino storefront, drawn as an engraved line illustration">
 <defs><radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
 <stop offset="0" stop-color="#4468AE" stop-opacity=".34"/><stop offset="1" stop-color="#4468AE" stop-opacity="0"/>
 </radialGradient></defs>
@@ -65,7 +65,7 @@ vitrine:`<svg viewBox="0 0 620 470" role="img" aria-label="Watches on stands ins
 <path class="ln-2" d="M96 370v40M534 370v40M96 410h438" opacity=".5"/>
 </svg>`,
 
-bench:`<svg viewBox="0 0 620 470" role="img" aria-label="A watchmaker's bench with a movement under a loupe, drawn as an engraved line illustration">
+bench:`<svg viewBox="0 0 620 470" role="img" aria-label="A Petino product preparation bench, drawn as an engraved line illustration">
 <path class="fl" d="M40 300h540v130H40z"/>
 <path class="ln" d="M40 300h540M40 300v130M580 300v130M40 430h540"/>
 <circle class="fl-2" cx="248" cy="192" r="104"/>
@@ -145,7 +145,7 @@ function fillHome(cat) {
 
   // Counts come from the catalogue so they cannot drift when it grows.
   document.querySelectorAll("[data-all-refs]").forEach((a) => {
-    a.textContent = `All ${cat.products.length} references →`;
+    a.textContent = `All ${cat.products.length} products →`;
   });
 
   /* ---- Collections — the heart of the page ----
@@ -162,7 +162,7 @@ function fillHome(cat) {
       <img src="${c.image}" alt="${esc(c.name)} — ${esc(c.heroName)}" loading="lazy" width="400" height="400">
       <b>${esc(c.name)}</b>
       ${c.blurb ? `<p class="cap" style="margin-bottom:4px">${esc(c.blurb)}</p>` : ""}
-      <p class="cap mb0">${c.count} references &middot; from ${money(c.from)}</p>
+      <p class="cap mb0">${c.count} products &middot; from ${money(c.from)}</p>
     </a>`).join("");
 
   /* ---- Three price registers ----
@@ -184,7 +184,7 @@ function fillHome(cat) {
     const img = root.querySelector("img");
     if (img && hero) { img.src = hero.image; img.alt = hero.name; }
     const out = root.querySelector("[data-tier-range]");
-    if (out) out.textContent = `${money(r.lo)} — ${money(r.hi)} · ${r.n} references`;
+    if (out) out.textContent = `${money(r.lo)} — ${money(r.hi)} · ${r.n} products`;
   });
 
   /* ---- Single-reference spotlight ----
@@ -222,7 +222,7 @@ function fillHome(cat) {
   const sc = document.getElementById("scenes");
   if (sc) sc.innerHTML =
     `<figure class="scene scene--wide">${SCENES.facade}
-       <figcaption class="scene__cap"><b>Bahnhofstrasse 41</b><span>The Z&uuml;rich salon, open since 1946</span></figcaption></figure>
+       <figcaption class="scene__cap"><b>Petino essentials</b><span>Food, play, walking and everyday comfort</span></figcaption></figure>
      <figure class="scene">${SCENES.vitrine}
        <figcaption class="scene__cap"><b>The vitrine</b><span>Haute Horlogerie, viewing by appointment</span></figcaption></figure>
      <figure class="scene">${SCENES.bench}
@@ -299,7 +299,7 @@ function fillHotspots(cat, hero) {
           <span class="price">${money(h.p.price)}</span>
         </div>
       </div>
-      <a class="hcard__go" href="product.html?id=${h.p.id}">View the reference →</a>
+      <a class="hcard__go" href="product.html?id=${h.p.id}">View the product →</a>
     </div>`).join("");
 
   const spots = [...layer.querySelectorAll(".hspot")];

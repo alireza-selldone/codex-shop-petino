@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     err.hidden = false;
     err.textContent = msg;
     document.querySelector("[data-article-title]").textContent = "Article not found";
-    document.title = "Article not found — Watchino";
+    document.title = "Article not found — Petino";
   };
 
   if (!slug && !blogId) return fail("No article was requested. Choose one from the journal.");
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   if (!a) return fail("That article does not exist, or is no longer published.");
 
-  document.title = `${a.title} — Watchino`;
+  document.title = `${a.title} — Petino`;
   document.querySelector("[data-article-title]").textContent = a.title;
 
   const meta = [fmtDate(a.date), a.author].filter(Boolean).join(" · ");
