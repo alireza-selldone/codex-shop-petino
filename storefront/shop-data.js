@@ -70,18 +70,18 @@ export async function subscribe(email, { accessKey = "newsletter", tags } = {}) 
    loadReviews() with the real source and `sample` becomes false — the label and
    every figure follow automatically. */
 const SAMPLE_REVIEWS = [
-  { name: "Marta K.",   city: "Rotterdam", rating: 5,
-    body: "Ordered on the Thursday, arrived Monday morning. Packaging was sensible rather than excessive, and the item matched the listing photographs closely." },
-  { name: "Daniel R.",  city: "Bristol",   rating: 5,
-    body: "I asked two questions before ordering and got a straight answer to both, including one that talked me out of the more expensive option." },
-  { name: "Priya S.",   city: "Toronto",   rating: 4,
-    body: "No complaints about the item itself. Delivery took a day longer than the estimate, though the tracking was accurate the whole way." },
-  { name: "Tomás L.",   city: "Lisbon",    rating: 5,
-    body: "Second order from here. The first one settled it — returns were handled without an argument when I picked the wrong size." },
-  { name: "Anne-Sofie H.", city: "Aarhus", rating: 3,
-    body: "The product is good and I would buy it again. The checkout asked me to re-enter my address twice, which was more friction than it needed to be." },
-  { name: "Ibrahim O.", city: "Manchester", rating: 4,
-    body: "Fair price for the quality. It is not the cheapest available, but nothing about it feels like a compromise after a few months of use." },
+  { name: "Maya & Milo", city: "Sample story", rating: 5,
+    body: "Milo usually ignores new toys after a day, but the treat disc has stayed in our daily play routine. The size guide also made choosing easy." },
+  { name: "Noah & Luna", city: "Sample story", rating: 5,
+    body: "The raincoat feels light, fits without restricting movement, and is much easier to clean than the one we had before." },
+  { name: "Sofia & Teddy", city: "Sample story", rating: 4,
+    body: "The collar arrived exactly as pictured and the padding sits comfortably around Teddy's neck. Delivery tracking was clear from start to finish." },
+  { name: "Leo & Coco", city: "Sample story", rating: 5,
+    body: "I liked having food, play and walking essentials in one place. Coco approved the toy before I had even cleared away the box." },
+  { name: "Emma & Archie", city: "Sample story", rating: 5,
+    body: "The product photos were accurate, checkout was quick, and the jacket size matched the measurements on the product page." },
+  { name: "Oliver & Nala", city: "Sample story", rating: 4,
+    body: "A cheerful shop with a useful edit of everyday products. The food filters helped me compare the options without opening every page." },
 ];
 
 /* Average and star distribution computed from whatever list is passed in. */

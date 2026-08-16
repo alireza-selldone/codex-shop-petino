@@ -78,6 +78,14 @@
   "spotlight": {
     "mode": "highest-price"
   },
+  "mostVisited": [
+    { "productId": 709885, "views": 24 },
+    { "productId": 709894, "views": 10 },
+    { "productId": 709921, "views": 9 },
+    { "productId": 709888, "views": 5 },
+    { "productId": 709889, "views": 5 },
+    { "productId": 709890, "views": 5 }
+  ],
   "contact": {
     "email": null,
     "phone": null,
