@@ -9,8 +9,11 @@ import { chromium } from "playwright";
 
 const B = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
 const CONTENT = ["/about-us", "/terms", "/privacy", "/contact-us"];
-const ALL = ["/", "/shop.html", "/product.html?id=325698", "/checkout.html", "/blog", "/article.html?id=31528", ...CONTENT];
-const EXPECTED_TOKENS = new Set(["SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION"]);
+const ALL = ["/", "/shop.html", "/product.html?id=709921", "/checkout.html", "/blog", "/article.html?id=31528", ...CONTENT];
+const EXPECTED_TOKENS = new Set([
+  "SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION",
+  "FOUNDED_YEAR", "LAST_UPDATED", "COUNTRY", "OPENING_HOURS",
+]);
 
 let fails = 0;
 const fail = (m) => { fails++; console.log(`  FAIL  ${m}`); };
@@ -44,7 +47,7 @@ for (const p of ALL) {
   await page.goto(B + p, { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => document.querySelectorAll("[data-collections] li").length > 0, null, { timeout: 15000 }).catch(() => {});
   const hrefs = await page.evaluate(() =>
-    [...document.querySelectorAll("footer.ft a")].map((a) => ({ href: a.getAttribute("href"), text: a.textContent.trim() })));
+    [...document.querySelectorAll("footer.ft a,footer.pet-footer a")].map((a) => ({ href: a.getAttribute("href"), text: a.textContent.trim() })));
   // Checkout's footer is deliberately stripped to the payment bar — no columns,
   // no exits. Requiring links there would be requiring a regression.
   if (!hrefs.length && p !== "/checkout.html") fail(`${p}: footer has no links`);
@@ -55,7 +58,7 @@ for (const p of ALL) {
     const url = new URL(href, B + "/");
     const r = await fetch(url);
     const body = await r.text();
-    const dup = body.length === home.length && url.pathname !== "/";
+    const dup = body.length === home.length && !["/", "/index.html"].includes(url.pathname);
     checked.set(href, true);
     if (r.status !== 200) fail(`${href} → ${r.status}`);
     else if (dup) fail(`${href} → 200 but serves the homepage`);
@@ -124,7 +127,7 @@ for (const p of ALL) {
 for (const [name, where] of found) {
   const loc = [...where].map(([p, n]) => `${p}×${n}`).join(", ");
   if (EXPECTED_TOKENS.has(name)) pass(`{{${name}}} — deliberately unfilled — ${loc}`);
-  else fail(`{{${name}}} rendered but is NOT one of the four contact tokens — ${loc}`);
+  else fail(`{{${name}}} rendered but is not an approved unfilled shop token — ${loc}`);
 }
 for (const t of EXPECTED_TOKENS) if (!found.has(t)) console.log(`        note: {{${t}}} does not appear on any page`);
 

@@ -15,13 +15,13 @@ const AUDIT_SRC = readFileSync(
    as well as the local dev server: node scripts/audit-run.mjs https://… */
 
 const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
-const PAGES=[["home","/","#catgrid .cat"],["shop","/shop.html","#pgrid .pcard"],
-             ["product","/product.html?id=709403","#pdp h1"],["checkout","/checkout.html","#sumrows .sum__row"],
+const PAGES=[["home","/",".pet-categories .pet-category"],["shop","/shop.html","#pgrid .pcard"],
+             ["product","/product.html?id=709921","#pdp h1"],["checkout","/checkout.html","#sumrows .sum__row"],
              ["about","/about-us",".prose h2"],["terms","/terms",".prose h2"],
              ["privacy","/privacy",".prose h2"],["contact","/contact-us",".prose h2"],
              ["blog","/blog",".post"],["article","/article.html?id=31528","[data-article-body] p"]];
 const WIDTHS=[1440,1024,1000,950,900,860,850,820,800,768,390];
-const BAG=JSON.stringify([{id:709403,qty:1},{id:325648,qty:2}]);
+const BAG=JSON.stringify([{id:709921,qty:1},{id:709920,qty:2}]);
 const b=await chromium.launch();
 let allPass=true; const rows=[];
 
@@ -36,7 +36,7 @@ let allPass=true; const rows=[];
    rather than against whatever the shop returned that minute. */
 const fontCache=new Map();
 async function cacheThirdParty(ctx){
-  await ctx.route(/fonts\.(googleapis|gstatic)\.com|xapi\.selldone\.com/,async(route)=>{
+  await ctx.route(/xapi\.selldone\.com/,async(route)=>{
     const url=route.request().url();
     if(!fontCache.has(url)){
       // Cache successes only. Memoising a failure replays one unlucky fetch
@@ -71,7 +71,16 @@ for(const w of WIDTHS){
     const errs=[]; p.on("console",m=>{if(m.type()==="error")errs.push(m.text());});
     p.on("requestfailed",r=>errs.push("REQFAIL "+r.url()));
     await p.goto(BASE+url,{waitUntil:"domcontentloaded"});
-    await p.waitForSelector(ready,{timeout:20000,state:"attached"});
+    try {
+      await p.waitForSelector(ready,{timeout:30000,state:"attached"});
+    } catch {
+      // A successful first XAPI response can still arrive after the initial
+      // page's module graph has timed out on a transient connection. Reload
+      // once against the now-warm deterministic cache; the assertion remains
+      // identical and still fails if the UI does not render.
+      await p.reload({waitUntil:"domcontentloaded"});
+      await p.waitForSelector(ready,{timeout:30000,state:"attached"});
+    }
     // networkidle can never settle if a third-party font/XAPI socket lingers;
     // it defaults to 30s per page, which wedges an 88-state matrix.
     await p.waitForLoadState("networkidle",{timeout:6000}).catch(()=>{});

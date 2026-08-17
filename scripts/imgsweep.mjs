@@ -79,7 +79,18 @@ const MEASURE = () => {
         fail: worst > TOL,
       };
     });
-  return { imgs, ratioBreaks };
+  const responsiveBreaks = document.body.classList.contains("petino-home")
+    ? [...document.querySelectorAll(".pet-hero__visual img,.pet-category img,.pet-viewed img,.pet-feature__image img,.pet-article__art img")]
+      .filter((i) => !i.hasAttribute("width") || !i.hasAttribute("height") || !i.srcset || !i.sizes)
+      .map((i) => ({
+        kind: "responsive-image-metadata",
+        host: (i.parentElement?.className || i.tagName).toString().split(" ")[0],
+        dimensions: `${i.getAttribute("width") || "missing"}x${i.getAttribute("height") || "missing"}`,
+        srcset: Boolean(i.srcset),
+        sizes: Boolean(i.sizes),
+      }))
+    : [];
+  return { imgs, ratioBreaks, responsiveBreaks };
 };
 
 const prime = async (p) => {
@@ -99,29 +110,32 @@ const prime = async (p) => {
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
 await ctx.addInitScript((v) => localStorage.setItem("storefront_bag_v1", v),
-  JSON.stringify([{ id: 709403, qty: 1 }, { id: 325648, qty: 2 }]));
+  JSON.stringify([{ id: 709921, qty: 1 }, { id: 709920, qty: 2 }]));
 const p = await ctx.newPage();
 
 let checked = 0, failed = 0;
 const report = (label, res) => {
-  const rows = res.imgs, ratio = res.ratioBreaks;
+  const rows = res.imgs, ratio = res.ratioBreaks, responsive = res.responsiveBreaks || [];
   checked += rows.length;
   const bad = rows.filter((r) => r.fail);
-  failed += bad.length + ratio.length;
+  failed += bad.length + ratio.length + responsive.length;
   const problems = [];
   if (bad.length) problems.push(bad.length + " OVERFLOWING");
   if (ratio.length) problems.push(ratio.length + " ASPECT-RATIO BROKEN");
+  if (responsive.length) problems.push(responsive.length + " RESPONSIVE METADATA MISSING");
   const mark = problems.length ? "FAIL" : "ok  ";
   console.log(`  ${mark} ${label.padEnd(34)} ${String(rows.length).padStart(3)} imgs${problems.length ? "  " + problems.join(", ") : ""}`);
   bad.slice(0, 3).forEach((r) =>
     console.log(`        overflow: ${r.host} nat ${r.nat} img ${r.img} box ${r.box} over ${JSON.stringify(r.over)}`));
   ratio.slice(0, 3).forEach((r) =>
     console.log(`        ratio:    ${r.host} declared ${r.declared} rendered ${r.rendered}`));
+  responsive.slice(0, 3).forEach((r) =>
+    console.log(`        metadata: ${r.host} dimensions ${r.dimensions} srcset=${r.srcset} sizes=${r.sizes}`));
 };
 
 // homepage, cart drawer, shop, checkout
 await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-await p.waitForSelector("#catgrid .cat"); await prime(p);
+await p.waitForSelector(".pet-categories .pet-category"); await prime(p);
 report("home", await p.evaluate(MEASURE));
 
 await p.goto(BASE + "/?open=cart", { waitUntil: "domcontentloaded" });
@@ -138,7 +152,6 @@ report("checkout summary", await p.evaluate(MEASURE));
 
 // every product page
 await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-await p.waitForSelector("#catgrid .cat");
 const ids = await p.evaluate(async () => (await import("/shop-data.js")).loadCatalog().then((c) => c.products.map((x) => x.id)));
 console.log(`\n  --- ${ids.length} product pages ---`);
 for (const id of ids) {
@@ -157,7 +170,7 @@ for (const id of ids) {
    a check that cannot go red is worse than no check at all. */
 console.log(NL + "  --- negative control ---");
 await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-await p.waitForSelector("#catgrid .cat");
+await p.waitForSelector(".pet-hero img");
 const control = await p.evaluate((src) => {
   const M = eval("(" + src + ")");
   const host = document.createElement("div");

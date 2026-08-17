@@ -85,14 +85,14 @@ async function run(browser, { nCats, nProducts = 40, cfg = null, label }) {
   await p.waitForTimeout(3500);
 
   const r = await p.evaluate(() => {
-    const grid = document.getElementById("catgrid");
+    const grid = document.querySelector("[data-home-categories]");
     const section = grid ? grid.closest("section") : null;
     return {
-      tiles: document.querySelectorAll("#catgrid .cat").length,
+      tiles: document.querySelectorAll("[data-home-categories] .pet-category").length,
       n: grid ? grid.dataset.n : null,
       cols: grid ? getComputedStyle(grid).gridTemplateColumns.split(" ").length : 0,
       hidden: section ? section.hidden : null,
-      slugs: [...document.querySelectorAll("#catgrid .cat")].map((a) => a.getAttribute("href")),
+      slugs: [...document.querySelectorAll("[data-home-categories] .pet-category")].map((a) => a.getAttribute("href")),
       banner: !!document.querySelector(".tplbanner"),
       cards: document.querySelectorAll(".pcard").length,
       est: document.querySelector("[data-brand-est]") ? document.querySelector("[data-brand-est]").textContent : null,
@@ -119,11 +119,11 @@ const browser = await chromium.launch();
 
 console.log("\nA DIFFERENT SHOP — none of this repo's category ids appear in the data");
 console.log("-".repeat(66));
-for (const [nCats, wantCols] of [[3, 3], [4, 4], [5, 3], [6, 3], [7, 4], [8, 4], [9, 5], [10, 5]]) {
+for (const [nCats, wantTiles, wantCols] of [[3, 3, 3], [4, 4, 4], [5, 4, 4], [6, 4, 4], [7, 4, 4], [8, 4, 4], [9, 4, 4], [10, 4, 4]]) {
   const r = await run(browser, { nCats, cfg: REAL_CFG, label: `${nCats} categories` });
-  const ok = r.tiles === nCats && r.cols === wantCols && !r.hidden;
+  const ok = r.tiles === wantTiles && r.cols === wantCols && !r.hidden;
   const line = `${String(nCats).padStart(2)} categories -> ${r.tiles} tiles, ${r.cols} columns`;
-  if (ok) pass(line); else fail(`${line} (expected ${nCats} tiles, ${wantCols} columns, section visible)`);
+  if (ok) pass(line); else fail(`${line} (expected ${wantTiles} featured tiles, ${wantCols} columns, section visible)`);
   if (r.errs.length) fail(`${nCats} categories: page error — ${r.errs[0]}`);
 }
 
@@ -137,9 +137,9 @@ console.log("-".repeat(66));
 }
 {
   const r = await run(browser, { nCats: 12, cfg: REAL_CFG });
-  (r.tiles === 10)
-    ? pass("12 categories -> the 10 largest kept")
-    : fail(`12 categories -> ${r.tiles} tiles, expected 10`);
+  (r.tiles === 4)
+    ? pass("12 categories -> four featured collections shown")
+    : fail(`12 categories -> ${r.tiles} tiles, expected 4 featured collections`);
 }
 
 console.log("\nSLUGS DERIVED FROM LIVE TITLES");

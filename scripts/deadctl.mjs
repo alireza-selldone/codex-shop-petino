@@ -18,7 +18,7 @@
 import { chromium } from "playwright";
 
 const B = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
-const PAGES = [["home","/","#catgrid .cat"],["shop","/shop.html","#pgrid .pcard"],
+const PAGES = [["home","/",".pet-categories .pet-category"],["shop","/shop.html","#pgrid .pcard"],
                 ["product","/product.html?id=325698","#pdp h1"],
                 // #sumrows is static markup present before hydration. checkout.js
                 // binds #next and .promo after awaiting the catalog, so waiting on
@@ -31,7 +31,7 @@ const PAGES = [["home","/","#catgrid .cat"],["shop","/shop.html","#pgrid .pcard"
 
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport:{width:1440,height:900} });
-await ctx.addInitScript(v=>localStorage.setItem("storefront_bag_v1",v), JSON.stringify([{id:709403,qty:1}]));
+await ctx.addInitScript(v=>localStorage.setItem("storefront_bag_v1",v), JSON.stringify([{id:709921,qty:1}]));
 
 /* Runs before page scripts, so every listener the app registers is recorded. */
 await ctx.addInitScript(() => {
