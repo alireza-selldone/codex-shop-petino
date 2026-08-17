@@ -1,7 +1,7 @@
 /* Journal listing. Category filtering is server-side via ?category=<id>, which
    the list endpoint documents; the chips below reflect the real category list
    and its real per-category counts. */
-import { loadBlog } from "./shop-data.js";
+import { loadBlog, editorialImage } from "./shop-data.js";
 import { esc } from "./app.js";
 
 const fmtDate = (iso) =>
@@ -13,9 +13,11 @@ function cardHTML(p) {
   // Extensionless: Cloudflare's html_handling strips ".html" and 307s, so
   // linking article.html would cost a redirect on every click.
   const href = p.slug ? `article?slug=${encodeURIComponent(p.slug)}` : `article?id=${p.blogId}`;
+  const media = editorialImage(p.image, p.slug);
+  const fallback = /food|bowl|feeding/i.test(p.title) ? "🥣" : /play|toy/i.test(p.title) ? "🎾" : /walk|collar|coat|jumper/i.test(p.title) ? "🐕" : "🐾";
   return `<a class="post" href="${href}">
     <div class="post__art">
-      ${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy" width="800" height="450">` : ""}
+      ${media.src ? `<img src="${esc(media.src)}"${media.srcset ? ` srcset="${esc(media.srcset)}" sizes="(max-width: 767px) calc(100vw - 28px), (max-width: 1023px) 48vw, 380px"` : ""} alt="" loading="lazy" width="960" height="576">` : `<span class="post__placeholder" aria-hidden="true">${fallback}</span>`}
     </div>
     <div class="post__txt">
       <p class="post__meta">

@@ -99,11 +99,14 @@ async function initPDP(cat) {
   const c = catOf(cat, p.cat);
   const others = cat.products.filter((x) => x.cat === p.cat && x.id !== p.id);
 
-  /* Real gallery from products/{id}/info; falls back to the list icon. */
+  /* The shop's extra gallery records currently contain migrated demo images
+     from unrelated products. Use the canonical product image until the
+     merchant replaces that data, so the detail page never misrepresents the
+     item being sold. */
   let gallery = [{ src: p.image, alt: `${p.name}, main view`, w: 1000, h: 1000 }];
   try {
     const detail = await loadProduct(p.id);
-    if (detail.gallery.length) gallery = detail.gallery;
+    if (detail.gallery[0]) gallery = [detail.gallery[0]];
   } catch (e) {
     console.warn("[watchino] gallery fallback to icon", e);
   }
@@ -147,13 +150,13 @@ async function initPDP(cat) {
       <p class="eyebrow mb0" style="margin-bottom:14px">Available options</p>
       <div class="swatches" role="radiogroup" aria-label="Available product options">
         ${variants.map((v, i) => `
-          <button class="sw${v.image ? " sw--img" : ""}${i ? "" : " is-on"}" type="button" role="radio"
+          <button class="sw${v.image ? " sw--img" : (!v.color ? " sw--text" : "")}${i ? "" : " is-on"}" type="button" role="radio"
                   aria-checked="${i ? "false" : "true"}"
                   data-i="${i}"
                   ${v.image ? "" : `style="${swatchStyle(v.color)}"`}
                   aria-label="Option ${i + 1} of ${variants.length}, ${esc(swatchLabel(v.color))}">
             ${v.image ? `<img src="${esc(img(v.image))}" alt="" width="60" height="60" loading="lazy">
-              <span class="sw__dot" aria-hidden="true" style="${swatchStyle(v.color)}"></span>` : ""}
+              <span class="sw__dot" aria-hidden="true" style="${swatchStyle(v.color)}"></span>` : (!v.color ? `<span>Option ${i + 1}</span>` : "")}
           </button>`).join("")}
       </div>
       <p class="swpos" data-sw-pos>Option 1 of ${variants.length}${variants[0].color ? ` · ${esc(swatchLabel(variants[0].color))}` : ""}${variants[0].sku ? ` · ${esc(variants[0].sku)}` : ""}</p>

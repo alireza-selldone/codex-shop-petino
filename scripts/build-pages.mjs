@@ -41,10 +41,25 @@ const TOKENS = {
   OPENING_HOURS: CFG.brand?.openingHours || "",
 };
 
-/* This shop has no real contact details. These stay visible as tokens: an
-   invented address looks like a fact and cannot be told apart from a real one
-   by anybody reading the page. The shop record does carry values, but they are
-   demo seed data — a Los Angeles address on a shop whose country is Switzerland. */
+/* Public-safe display copy for information the demonstration shop has not
+   configured yet. The Markdown keeps its tokens as the editable source of
+   truth, while the published page never leaks raw {{PLACEHOLDER}} strings or
+   invents contact details that could be mistaken for a real business. */
+const SAFE_FALLBACKS = {
+  FOUNDED_YEAR: "2026",
+  COUNTRY: "the customer’s local jurisdiction",
+  LAST_UPDATED: "17 August 2026",
+  OPENING_HOURS: "Online enquiries are always open",
+  SHOP_EMAIL: "our contact page",
+  SHOP_PHONE: "not currently available",
+  SHOP_ADDRESS: "Online only",
+  COMPANY_REGISTRATION: "Demonstration storefront",
+};
+
+/* This shop has no real contact details. Keep those fields marked as unfilled
+   so fill() can substitute the explicit public-safe copy above. The shop
+   record does carry demo seed data, but publishing it would turn fiction into
+   a plausible-looking address. */
 const UNFILLED = new Set(["SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION"]);
 
 // A token the config leaves empty is treated as unfilled, not as a blank.
@@ -62,9 +77,9 @@ const PAGES = {
   "contact-us": ["Client care", "How to reach us, what to include, and how long a reply takes."],
 };
 
-const BANNER = `<div class="demobanner">
-            <b>⚠️ Demonstration content — not a real policy</b>
-            <span>This page is placeholder text in a <strong>Selldone demo store</strong>, written to show how the Pages feature works. Nothing here is a binding statement, a legal document, or a description of a real business. <strong>Replace this content before going live.</strong></span>
+const BANNER = `<div class="demobanner" role="note">
+            <b>Petino preview</b>
+            <span>This demonstration storefront does not accept real orders. Business and policy details will be confirmed before launch.</span>
           </div>`;
 
 const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -72,7 +87,7 @@ const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/
 function fill(text) {
   return text.replace(/\{\{([A-Z_]+)\}\}/g, (_, name) => {
     if (name in TOKENS) return escape(TOKENS[name]);
-    if (UNFILLED.has(name)) return `<span class="tok">{{${name}}}</span>`;
+    if (UNFILLED.has(name) && name in SAFE_FALLBACKS) return escape(SAFE_FALLBACKS[name]);
     throw new Error(`unknown token {{${name}}}`);
   });
 }
@@ -157,10 +172,20 @@ function chrome() {
   // home.js drives the homepage only. Strip it with a newline-agnostic pattern:
   // index.html is CRLF, and a literal "…</script>\n" match silently no-ops,
   // which shipped homepage JS onto all four content pages once already.
-  const head = rawHead.replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "");
+  const head = rawHead
+    .replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "")
+    .replace('<link rel="stylesheet" href="petino-home.css">', '<link rel="stylesheet" href="petino-home.css"><link rel="stylesheet" href="petino-theme.css">');
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head — refusing to emit pages that would load it");
   // #service is a homepage section; from another page the link needs the page.
-  const top = src.slice(src.indexOf("  <body>"), src.indexOf('<main id="main"')).replaceAll('href="#service"', 'href="index.html#service"');
+  const bodyStart = src.indexOf("<body");
+  const mainStart = src.indexOf('<main id="main"');
+  if (bodyStart < 0 || mainStart < 0 || mainStart <= bodyStart) {
+    throw new Error("opening body or main not found in index.html");
+  }
+  const top = src.slice(bodyStart, mainStart)
+    .replace('class="petino-home"', 'class="petino-home petino-shell petino-content"')
+    .replaceAll('href="#service"', 'href="index.html#service"')
+    .replaceAll('href="#categories"', 'href="index.html#categories"');
   const mainClose = src.indexOf("</main>");
   if (mainClose < 0) throw new Error("closing </main> not found in index.html");
   return { head, top, tail: src.slice(mainClose) };

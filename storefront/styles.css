@@ -49,7 +49,11 @@
   --mid:460ms;
   --slow:720ms;
 
-  --radius:2px;
+  --radius-control:12px;
+  --radius-card:20px;
+  --radius-panel:28px;
+  --radius-pill:999px;
+  --radius:var(--radius-control);
   --rail:56px;
   --maxw:1440px;
   --pad:48px;

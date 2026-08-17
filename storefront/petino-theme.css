@@ -25,3 +25,67 @@
 .petino-shell .pghead.ink .pghead__meta,.petino-shell .pghead.ink .pghead__meta *{color:#475d57}
 .petino-shell .chip span{color:#475d57}
 .petino-shell .chip.is-on span{color:#fff}
+
+/* 2026 storefront unification: one shape/type system across catalogue,
+   editorial and checkout, with the compact checkout header as the exception. */
+.petino-shell{--radius-control:12px;--radius-card:20px;--radius-panel:28px;--radius-pill:999px}
+.petino-shell .topbar{font-size:13px}
+.petino-shell .crumb,.petino-shell .ref,.petino-shell .cap,.petino-shell .eyebrow,
+.petino-shell .post__meta,.petino-shell .ft__bar,.petino-shell .ft h4{font-size:13px}
+.petino-shell .btn,.petino-shell .sort,.petino-shell input,.petino-shell textarea,
+.petino-shell select,.petino-shell .choice label,.petino-shell .qty{border-radius:var(--radius-control)}
+.petino-shell .filters,.petino-shell .pcard,.petino-shell .post,.petino-shell .fset,
+.petino-shell .sum,.petino-shell .done{border-radius:var(--radius-card)}
+.petino-shell .galmain,.petino-shell .thumb{border-radius:var(--radius-card);overflow:hidden}
+.petino-shell .prose{border-radius:var(--radius-panel)}
+.petino-shell .chip{border-radius:var(--radius-pill)}
+.petino-shell .pcard__name{display:-webkit-box;min-height:2.7em;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;line-height:1.35}
+.petino-shell .post__art:empty::after,.petino-shell .thumb img:not([src])::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,#e8efe0 30%,#f7faf5 46%,#e8efe0 62%);background-size:220% 100%;animation:petino-shimmer 1.4s linear infinite}
+@keyframes petino-shimmer{to{background-position:-220% 0}}
+
+/* The legacy catalogue markup now reads like the same light Petino footer. */
+.petino-shell .ft{background:#f4eadf;color:#18332f;border-top:1px solid #e4d8ca}
+.petino-shell .ft .logo{color:#18332f}
+.petino-shell .ft a{color:#405852}
+.petino-shell .ft a:hover{color:#a23824}
+.petino-shell .ft h4,.petino-shell .ft .demonote,.petino-shell .ft__bar{color:#586c66}
+.petino-shell .ft__bar{border-color:#d8cec2}
+.petino-shell .ft.ink .lede,.petino-shell .ft.ink .cap,.petino-shell .ft.ink .ref{color:#475d57}
+.petino-shell .ft.ink .logo .pet-dot{color:#c9442a}
+
+/* A container decides catalogue density; the sidebar no longer forces three
+   cramped cards at tablet/compact-desktop widths. */
+.petino-shell .shop>div:last-child{container-type:inline-size;container-name:catalogue}
+.petino-shell .shop .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@container catalogue (min-width:760px){.petino-shell .shop .pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.petino-shell .artcover{border-radius:var(--radius-panel);overflow:hidden;background:#e8efe0}
+.petino-shell .post__art img,.petino-shell .artcover img{background:#e8efe0}
+.petino-shell .demobanner{border:1px solid #d7c89f!important;border-radius:var(--radius-control)!important;background:#fffaf0!important;color:#4f4632!important}
+.petino-shell .demobanner b{color:#18332f!important}
+.petino-shell .demobanner span{color:#58645f!important;font-size:13px!important}
+
+@media(max-width:767px){
+  .petino-shell .h1{font-size:clamp(38px,12vw,50px);line-height:1.08}
+  .petino-shell .pghead{padding:44px 0}
+  .petino-shell .prose{padding:24px 20px;font-size:17px}
+  .petino-shell .posts{grid-template-columns:1fr}
+  .petino-shell .post__title{font-size:24px}
+  .petino-shell .ft{padding-top:48px}
+  .petino-shell .ft__cols{gap:28px}
+}
+@media(max-width:360px){.petino-shell .pgrid{grid-template-columns:1fr}}
+.petino-shell .sw--text{width:auto;min-width:78px;padding-inline:14px;border-radius:var(--radius-pill);font-size:13px;font-weight:800}
+.petino-shell .checkout-empty{max-width:720px;margin:24px auto 72px;padding:clamp(30px,6vw,68px);text-align:center;border:1px solid #e9e0d4;border-radius:var(--radius-panel);background:#fff;box-shadow:0 18px 55px rgba(24,51,47,.07)}
+.petino-shell .checkout-empty__mark{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 22px;border-radius:50%;background:#dcebdd;font-size:34px}
+.petino-shell .checkout-empty .h1{margin:0 auto 16px;max-width:12ch}
+.petino-shell .checkout-empty .lede{max-width:54ch;margin:0 auto 28px}
+.petino-content .pet-header--orbit .pet-logo,.petino-content .pet-header--orbit .nav a{color:#fff}
+.petino-content .pet-header--orbit .nav a.is-active{color:#18332f}
+.petino-content .pet-header--orbit .iconbtn{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
+.petino-content .pet-header--orbit .pet-orbit-bag{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
+.petino-home.petino-shell .pet-header--orbit .pet-logo,.petino-home.petino-shell .pet-header--orbit .nav a{color:#fff}
+.petino-home.petino-shell .pet-header--orbit .nav a.is-active{color:#18332f}
+.petino-home.petino-shell .pet-header--orbit .iconbtn{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
+.petino-home.petino-shell .pet-header--orbit .pet-orbit-bag{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
+.petino-shell .post__placeholder{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#e6efcf,#dcebdd);font-size:64px}

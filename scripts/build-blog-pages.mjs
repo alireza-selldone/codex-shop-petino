@@ -14,11 +14,20 @@ const OUT = join(ROOT, "storefront");
 function chrome() {
   const src = readFileSync(join(OUT, "index.html"), "utf8");
   const rawHead = src.slice(src.indexOf("<head>"), src.indexOf("</head>"));
-  const head = rawHead.replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "");
+  const head = rawHead
+    .replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "")
+    .replace('<link rel="stylesheet" href="petino-home.css">', '<link rel="stylesheet" href="petino-home.css"><link rel="stylesheet" href="petino-theme.css">');
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head");
+  const bodyStart = src.indexOf("<body");
+  const mainStart = src.indexOf('<main id="main"');
+  if (bodyStart < 0 || mainStart < 0 || mainStart <= bodyStart) {
+    throw new Error("opening body or main not found in index.html");
+  }
   const top = src
-    .slice(src.indexOf("  <body>"), src.indexOf('<main id="main"'))
-    .replaceAll('href="#service"', 'href="index.html#service"');
+    .slice(bodyStart, mainStart)
+    .replace('class="petino-home"', 'class="petino-home petino-shell petino-content"')
+    .replaceAll('href="#service"', 'href="index.html#service"')
+    .replaceAll('href="#categories"', 'href="index.html#categories"');
   const mainClose = src.indexOf("</main>");
   if (mainClose < 0) throw new Error("closing </main> not found in index.html");
   return { head, top, tail: src.slice(mainClose) };

@@ -15,12 +15,16 @@ const AUDIT_SRC = readFileSync(
    as well as the local dev server: node scripts/audit-run.mjs https://… */
 
 const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
-const PAGES=[["home","/",".pet-categories .pet-category"],["shop","/shop.html","#pgrid .pcard"],
+const ALL_PAGES=[["home","/",".pet-categories .pet-category"],["shop","/shop.html","#pgrid .pcard"],
              ["product","/product.html?id=709921","#pdp h1"],["checkout","/checkout.html","#sumrows .sum__row"],
              ["about","/about-us",".prose h2"],["terms","/terms",".prose h2"],
              ["privacy","/privacy",".prose h2"],["contact","/contact-us",".prose h2"],
-             ["blog","/blog",".post"],["article","/article.html?id=31528","[data-article-body] p"]];
-const WIDTHS=[1440,1024,1000,950,900,860,850,820,800,768,390];
+             ["blog","/blog",".post"],["article","/article?slug=happy-walk-checklist","[data-article-body] p"]];
+const requestedPages = new Set((process.argv[3] || "").split(",").filter(Boolean));
+const PAGES = requestedPages.size ? ALL_PAGES.filter(([name]) => requestedPages.has(name)) : ALL_PAGES;
+const requestedWidths = (process.argv[4] || "").split(",").map(Number).filter(Boolean);
+const WIDTHS=requestedWidths.length ? requestedWidths : [1440,1024,1000,950,900,860,850,820,800,768,390];
+if (!PAGES.length) throw new Error(`No audit pages matched: ${[...requestedPages].join(", ")}`);
 const BAG=JSON.stringify([{id:709921,qty:1},{id:709920,qty:2}]);
 const b=await chromium.launch();
 let allPass=true; const rows=[];

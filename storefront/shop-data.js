@@ -560,6 +560,29 @@ export async function loadProduct(id) {
 export const byId = (cat, id) => cat.products.find((p) => p.id === Number(id));
 export const catOf = (cat, slug) => cat.cats.find((c) => c.slug === slug) || null;
 
+/* Article covers created for Petino live in this repository. Selldone keeps
+   the original absolute GitHub URL, which is easily rate-limited in browsers;
+   serve the same asset from the storefront's own origin instead. Keeping this
+   resolver central also prevents blog and article views from drifting. */
+export function localAssetUrl(value) {
+  const source = String(value || "");
+  const match = source.match(/^https:\/\/raw\.githubusercontent\.com\/alireza-selldone\/codex-shop-petino\/[^/]+\/storefront\/(assets\/[^?#]+)(?:[?#].*)?$/i);
+  return match ? `/${match[1]}` : source;
+}
+
+export function editorialImage(value, slug = "") {
+  const known = {
+    "happy-walk-checklist": "/assets/articles/happy-walk.png",
+    "five-minutes-of-play": "/assets/articles/play-matters.png",
+    "better-everyday-bowl": "/assets/articles/better-bowl.png",
+  };
+  const src = localAssetUrl(value) || known[String(slug)] || "";
+  const match = src.match(/^(\/assets\/articles\/[^/]+?)(?:-(?:480|960))?\.png$/i);
+  return match
+    ? { src: `${match[1]}-960.webp`, srcset: `${match[1]}-480.webp 480w, ${match[1]}-960.webp 960w` }
+    : { src, srcset: "" };
+}
+
 /* ---------- Bag ----------
    Client-side only. This storefront is a capability demonstration: it never
    writes a basket to the shop and never places an order. */

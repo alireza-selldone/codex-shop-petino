@@ -1,6 +1,6 @@
 /* Single article. Accepts ?slug= or ?id=, where id is the shop-blog id the
    detail route calls blog_id — not the article id. */
-import { loadArticle, loadBlogCategories } from "./shop-data.js";
+import { loadArticle, loadBlogCategories, editorialImage, localAssetUrl } from "./shop-data.js";
 import { esc } from "./app.js";
 
 const fmtDate = (iso) =>
@@ -14,7 +14,9 @@ const fmtDate = (iso) =>
 function cleanBody(html, coverSrc) {
   const doc = new DOMParser().parseFromString(html || "", "text/html");
   doc.querySelectorAll("figure img").forEach((img) => {
-    if (coverSrc && img.getAttribute("src") === coverSrc) {
+    const source = localAssetUrl(img.getAttribute("src"));
+    img.setAttribute("src", source);
+    if (coverSrc && source === localAssetUrl(coverSrc)) {
       img.closest(".medium-insert-images, figure")?.remove();
     }
   });
@@ -45,6 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return fail("This article could not be loaded from Selldone. Refresh to try again.");
   }
   if (!a) return fail("That article does not exist, or is no longer published.");
+  if (/\b(watch|horolog(?:y|ical)?|timepiece|chronograph)\b/i.test(`${a.title || ""} ${a.body || ""}`)) {
+    return fail("That article is not part of the Petino journal.");
+  }
 
   document.title = `${a.title} — Petino`;
   document.querySelector("[data-article-title]").textContent = a.title;
@@ -52,10 +57,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const meta = [fmtDate(a.date), a.author].filter(Boolean).join(" · ");
   document.querySelector("[data-article-meta]").textContent = meta;
 
-  if (a.image) {
+  const articleMedia = editorialImage(a.image, slug);
+  if (articleMedia.src) {
     const cover = document.querySelector("[data-article-cover]");
     const img = cover.querySelector("img");
-    img.src = a.image;
+    img.src = articleMedia.src;
+    if (articleMedia.srcset) {
+      img.srcset = articleMedia.srcset;
+      img.sizes = "(max-width: 767px) calc(100vw - 28px), min(1120px, calc(100vw - 40px))";
+    }
     img.alt = a.title;
     cover.hidden = false;
   }

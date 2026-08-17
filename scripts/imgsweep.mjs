@@ -150,6 +150,14 @@ await p.goto(BASE + page_("/checkout"), { waitUntil: "domcontentloaded" });
 await p.waitForSelector("#sumrows .sum__row"); await p.waitForTimeout(1000);
 report("checkout summary", await p.evaluate(MEASURE));
 
+await p.goto(BASE + "/blog", { waitUntil: "domcontentloaded" });
+await p.waitForSelector(".post img", { timeout: 20000 }); await prime(p);
+report("journal covers", await p.evaluate(MEASURE));
+
+await p.goto(BASE + "/article?slug=happy-walk-checklist", { waitUntil: "domcontentloaded" });
+await p.waitForSelector("[data-article-cover] img", { timeout: 20000 }); await prime(p);
+report("article cover", await p.evaluate(MEASURE));
+
 // every product page
 await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
 const ids = await p.evaluate(async () => (await import("/shop-data.js")).loadCatalog().then((c) => c.products.map((x) => x.id)));

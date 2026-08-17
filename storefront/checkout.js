@@ -81,11 +81,15 @@ function renderSummary() {
   const lines = bagLines(CAT);
   const rows = $("#sumrows");
   if (!lines.length) {
-    rows.innerHTML = `<p class="cap" style="padding:12px 0">Your bag is empty. <a href="shop.html" style="text-decoration:underline">Browse the collection</a>.</p>`;
-    $("#sumtotals").hidden = true;
+    $("#emptycheckout").hidden = false;
+    $("#steps").hidden = true;
+    $(".co").hidden = true;
     $("#next").disabled = true;
     return;
   }
+  $("#emptycheckout").hidden = true;
+  $("#steps").hidden = false;
+  $(".co").hidden = false;
   $("#sumtotals").hidden = false;
   $("#next").disabled = false;
   rows.innerHTML = lines.map((r) => `
@@ -135,6 +139,13 @@ function showSuccess() {
 
 async function init() {
   if (!$("#coform")) return;
+  // Empty checkout must render immediately and must not depend on a catalogue
+  // request succeeding; it is a local bag state, not remote shop data.
+  if (!readBag().length) {
+    CAT = { products: [] };
+    renderSummary();
+    return;
+  }
   CAT = await loadCatalog();
   try { SHOP = await loadShop(); } catch { SHOP = null; }
 

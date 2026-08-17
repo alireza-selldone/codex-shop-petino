@@ -9,11 +9,8 @@ import { chromium } from "playwright";
 
 const B = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
 const CONTENT = ["/about-us", "/terms", "/privacy", "/contact-us"];
-const ALL = ["/", "/shop.html", "/product.html?id=709921", "/checkout.html", "/blog", "/article.html?id=31528", ...CONTENT];
-const EXPECTED_TOKENS = new Set([
-  "SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION",
-  "FOUNDED_YEAR", "LAST_UPDATED", "COUNTRY", "OPENING_HOURS",
-]);
+const ARTICLE = "/article?slug=happy-walk-checklist";
+const ALL = ["/", "/shop.html", "/product.html?id=709921", "/checkout.html", "/blog", ARTICLE, ...CONTENT];
 
 let fails = 0;
 const fail = (m) => { fails++; console.log(`  FAIL  ${m}`); };
@@ -40,8 +37,16 @@ const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 
-/* 2 — every footer link resolves ----------------------------------------- */
-console.log("\n2. Footer links resolve");
+/* 2 — generated pages retain the complete shared shell ------------------- */
+console.log("\n2. Generated pages retain the Petino shell");
+for (const p of [...CONTENT, "/blog", ARTICLE]) {
+  const source = await (await fetch(B + p)).text();
+  const valid = /<body\b[^>]*>[\s\S]*<header\b[^>]*>[\s\S]*<main\b[^>]*>[\s\S]*<footer\b[^>]*>[\s\S]*<\/body>/i.test(source);
+  valid ? pass(`${p} has body, header, main and footer`) : fail(`${p} is missing part of the shared shell`);
+}
+
+/* 3 — every footer link resolves ----------------------------------------- */
+console.log("\n3. Footer links resolve");
 const checked = new Map();
 for (const p of ALL) {
   await page.goto(B + p, { waitUntil: "domcontentloaded" });
@@ -67,8 +72,8 @@ for (const p of ALL) {
 }
 console.log(`        ${checked.size} distinct footer hrefs, all resolved`);
 
-/* 3 — no href="#" left anywhere ------------------------------------------ */
-console.log("\n3. No href=\"#\" anywhere");
+/* 4 — no href="#" left anywhere ------------------------------------------ */
+console.log("\n4. No href=\"#\" anywhere");
 let stubs = 0;
 for (const p of ALL) {
   await page.goto(B + p, { waitUntil: "domcontentloaded" });
@@ -81,12 +86,12 @@ for (const p of ALL) {
 }
 if (!stubs) pass(`0 stub links across all ${ALL.length} page states`);
 
-/* 4 — Terms anchors scroll to the right section --------------------------- */
+/* 5 — Terms anchors scroll to the right section --------------------------- */
 /* Run each anchor on a COLD context. With fonts warm all three land perfectly;
    the failure only appears on a first visit, when the web fonts reflow the
    document after the browser has already jumped. That is the visitor's
    experience, so it is the one worth testing. */
-console.log("\n4. Terms anchors scroll to their section (cold cache)");
+console.log("\n5. Terms anchors scroll to their section (cold cache)");
 for (const [id, expect] of [["delivery", "6. Delivery"], ["returns", "7. Returns"], ["warranty", "8. Faulty items"]]) {
   const cold = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await cold.newPage();
@@ -110,8 +115,8 @@ for (const [id, expect] of [["delivery", "6. Delivery"], ["returns", "7. Returns
   await cold.close();
 }
 
-/* 5 — token audit --------------------------------------------------------- */
-console.log("\n5. Rendered {{TOKEN}} audit");
+/* 6 — token and empty-checkout audit -------------------------------------- */
+console.log("\n6. No raw {{TOKEN}} reaches a visitor");
 const found = new Map();
 for (const p of ALL) {
   await page.goto(B + p, { waitUntil: "domcontentloaded" });
@@ -126,10 +131,18 @@ for (const p of ALL) {
 }
 for (const [name, where] of found) {
   const loc = [...where].map(([p, n]) => `${p}×${n}`).join(", ");
-  if (EXPECTED_TOKENS.has(name)) pass(`{{${name}}} — deliberately unfilled — ${loc}`);
-  else fail(`{{${name}}} rendered but is not an approved unfilled shop token — ${loc}`);
+  fail(`{{${name}}} rendered — ${loc}`);
 }
-for (const t of EXPECTED_TOKENS) if (!found.has(t)) console.log(`        note: {{${t}}} does not appear on any page`);
+if (!found.size) pass("0 raw storefront tokens across every public page");
+
+await page.goto(B + "/checkout.html", { waitUntil: "domcontentloaded" });
+await page.waitForSelector("#emptycheckout:not([hidden])", { timeout: 20000 });
+const emptyCheckout = await page.evaluate(() => ({
+  formHidden: document.querySelector(".co")?.hidden,
+  cta: document.querySelector("#emptycheckout a[href*='shop']")?.textContent.trim(),
+}));
+if (emptyCheckout.formHidden && emptyCheckout.cta) pass(`empty checkout shows “${emptyCheckout.cta}” and hides the form`);
+else fail(`empty checkout state incomplete: ${JSON.stringify(emptyCheckout)}`);
 
 await browser.close();
 console.log(fails ? `\n${fails} FAILURE(S)\n` : `\nAll checks passed.\n`);
