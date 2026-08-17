@@ -44,7 +44,7 @@ function initPetinoChrome() {
 export function cardHTML(p) {
   return `<a class="pcard" href="product.html?id=${p.id}">
     <div class="pcard__art">
-      <img src="${p.image}" alt="${esc(p.name)}" loading="lazy" width="500" height="500">
+      <img src="${p.image}"${responsiveProductAttrs(p.image, "(max-width: 767px) 46vw, (max-width: 1023px) 30vw, 260px", p.image256, p.image512)} alt="${esc(p.name)}" loading="lazy" width="512" height="512">
     </div>
     <p class="eyebrow" style="margin-bottom:6px">${esc(p.catName)}</p>
     <span class="pcard__name">${esc(p.name)}</span>
@@ -55,6 +55,16 @@ export function cardHTML(p) {
 export const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+export const productCount = (count) => `${count} ${count === 1 ? "product" : "products"}`;
+
+export function responsiveProductAttrs(src, sizes, small = "", large = "") {
+  const value = String(src || "");
+  if (small && large) return ` srcset="${small} 256w, ${large} 512w" sizes="${sizes}"`;
+  if (!/^assets\/products\/.*\.png$/i.test(value)) return "";
+  const base = value.slice(0, -4);
+  return ` srcset="${base}-320.png 320w, ${base}-640.png 640w" sizes="${sizes}"`;
+}
 
 /* ---------- Template banner ----------
    Fires on "still the template OR no shop id at all" — never on a specific
@@ -131,6 +141,9 @@ function initHeader() {
     scrim?.classList.add("is-on");
     document.documentElement.classList.add("is-locked");
     el.setAttribute("aria-hidden", "false");
+    if (el.classList.contains("drawer")) {
+      document.querySelector('[data-open="nav"]')?.setAttribute("aria-expanded", "true");
+    }
     // The first focusable in a panel is its Close button. Where the panel has a
     // field that is the point of opening it, send focus there instead.
     (el.querySelector("[data-autofocus]") || focusables(el)[0])?.focus();
@@ -142,6 +155,7 @@ function initHeader() {
       e.classList.remove("is-open");
       if (!e.classList.contains("filters")) e.setAttribute("aria-hidden", "true");
     });
+    document.querySelector('[data-open="nav"]')?.setAttribute("aria-expanded", "false");
     scrim?.classList.remove("is-on");
     if (!document.querySelector(".lbox.is-open")) document.documentElement.classList.remove("is-locked");
     if (had && lastFocus) { lastFocus.focus(); lastFocus = null; }
@@ -237,9 +251,9 @@ function fillNav() {
   if (mega) {
     mega.innerHTML = CAT.cats.map((c) => `
       <a class="mega__item" href="shop.html?cat=${c.slug}">
-        <img src="${c.image}" alt="${esc(c.name)} — ${esc(c.heroName)}" loading="lazy" width="200" height="200">
+        <img src="${c.image}"${responsiveProductAttrs(c.image, "200px", c.image256, c.image512)} alt="${esc(c.name)} — ${esc(c.heroName)}" loading="lazy" width="512" height="512">
         <b>${esc(c.name)}</b>
-        <span class="cap">${c.count} products</span>
+        <span class="cap">${productCount(c.count)}</span>
       </a>`).join("");
   }
 
@@ -250,10 +264,22 @@ function fillNav() {
 
   document.querySelectorAll("[data-drawer-nav]").forEach((nav) => {
     nav.innerHTML =
-      `<a href="shop.html">All products<small>${CAT.products.length} in the collection</small></a>` +
+      `<div class="drawer__primary">
+        <a href="index.html">Explore</a>
+        <a href="shop.html">Shop</a>
+        <a href="index.html#categories">Pet worlds</a>
+        <a href="/blog">Pet journal</a>
+        <a href="/about-us">Our story</a>
+        <button type="button" data-drawer-account>Account<small>Sign in or view your profile</small></button>
+      </div>` +
+      `<a href="shop.html">All products<small>${productCount(CAT.products.length)} in the collection</small></a>` +
       CAT.cats.map((c) =>
-        `<a href="shop.html?cat=${c.slug}">${esc(c.name)}<small>${c.count} products · from ${money(c.from)}</small></a>`).join("") +
+        `<a href="shop.html?cat=${c.slug}">${esc(c.name)}<small>${productCount(c.count)} · from ${money(c.from)}</small></a>`).join("") +
       `<a href="index.html#service">Client care</a>`;
+    nav.querySelector("[data-drawer-account]")?.addEventListener("click", () => {
+      nav.closest(".drawer")?.querySelector("[data-close]")?.click();
+      document.querySelector('[data-open="account"]')?.click();
+    });
   });
 }
 

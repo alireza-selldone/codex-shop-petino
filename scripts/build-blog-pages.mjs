@@ -19,15 +19,17 @@ function chrome() {
   const top = src
     .slice(src.indexOf("  <body>"), src.indexOf('<main id="main"'))
     .replaceAll('href="#service"', 'href="index.html#service"');
-  return { head, top, tail: src.slice(src.indexOf("      </main>")) };
+  const mainClose = src.indexOf("</main>");
+  if (mainClose < 0) throw new Error("closing </main> not found in index.html");
+  return { head, top, tail: src.slice(mainClose) };
 }
 
 const PAGES = [
   {
     file: "blog.html",
     script: "blog.js",
-    title: "Journal — Watchino",
-    desc: "Notes on choosing, wearing and looking after a mechanical watch.",
+    title: "Pet journal — Petino",
+    desc: "Practical notes on feeding, playing with and caring for happy pets.",
     main: `<main id="main" tabindex="-1">
 
         <section class="pghead ink">
@@ -57,8 +59,8 @@ const PAGES = [
   {
     file: "article.html",
     script: "article.js",
-    title: "Journal — Watchino",
-    desc: "An article from the Watchino journal.",
+    title: "Pet journal — Petino",
+    desc: "An article from the Petino journal.",
     main: `<main id="main" tabindex="-1">
 
         <article data-article>

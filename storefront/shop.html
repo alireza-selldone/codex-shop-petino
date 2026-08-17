@@ -29,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.selldone.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <script type="module" src="app.js"></script>
     <script type="module" src="shop.js"></script>
@@ -69,7 +69,7 @@
             </nav>
             <div class="mega"><div class="mega__grid" id="megagrid"></div></div>
           </div>
-          <button class="burger mobonly" data-open="nav" aria-label="Open menu"><span></span></button>
+          <button class="burger mobonly" data-open="nav" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span></button>
           <a class="logo" href="index.html">Watch<span>i</span>no</a>
           <div class="hdr__act">
             <button class="iconbtn" type="button" data-open="search" aria-label="Search">
@@ -206,7 +206,7 @@
     <button class="fbar mobonly" data-open="filters">Filter &amp; sort</button>
 
     <!-- Mobile navigation -->
-    <div class="drawer ink" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true">
+    <div class="drawer ink" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true">
       <div class="drawer__top">
         <span class="rail__label" style="writing-mode:horizontal-tb">MENU</span>
         <button class="xbtn" data-close>Close</button>

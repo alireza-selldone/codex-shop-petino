@@ -1,5 +1,5 @@
 import { loadCatalog, money, byId, loadReviews } from "./shop-data.js";
-import { cardHTML, esc } from "./app.js";
+import { cardHTML, esc, productCount, responsiveProductAttrs } from "./app.js";
 
 function stars(n) {
   const full = Math.round(n);
@@ -9,11 +9,15 @@ function stars(n) {
 function renderCategories(cat) {
   const root = document.querySelector("[data-home-categories]");
   if (!root) return;
-  root.innerHTML = cat.cats.slice(0, 4).map((category) => `
+  const categories = cat.cats.slice(0, 4);
+  root.dataset.n = String(categories.length);
+  const section = root.closest("section");
+  if (section) section.hidden = categories.length < 3;
+  root.innerHTML = categories.map((category) => `
     <a class="pet-category" href="shop.html?cat=${encodeURIComponent(category.slug)}">
       <b>${esc(category.name)}</b>
-      <small>${category.count} products · from ${money(category.from)}</small>
-      <img src="${category.image}" alt="${esc(category.name)}" width="400" height="400" loading="lazy">
+      <small>${productCount(category.count)} · from ${money(category.from)}</small>
+      <img src="${category.image}"${responsiveProductAttrs(category.image, "(max-width: 767px) 46vw, (max-width: 1023px) 30vw, 280px", category.image256, category.image512)} alt="${esc(category.name)}" width="512" height="512" loading="lazy">
     </a>`).join("");
 }
 
@@ -36,7 +40,15 @@ function renderMostViewed(cat) {
   const link = document.querySelector("[data-feature-link]");
   const badge = document.querySelector("[data-feature-badge]");
   if (name) name.textContent = featured.name;
-  if (image) { image.src = featured.image; image.alt = featured.name; }
+  if (image) {
+    image.src = featured.image;
+    image.alt = featured.name;
+    const local = /^assets\/products\/.*\.png$/i.test(featured.image);
+    image.srcset = featured.image256 && featured.image512
+      ? `${featured.image256} 256w, ${featured.image512} 512w`
+      : local ? `${featured.image.slice(0, -4)}-320.png 320w, ${featured.image.slice(0, -4)}-640.png 640w` : "";
+    image.sizes = "(max-width: 767px) 80vw, 38vw";
+  }
   if (link) link.href = `product.html?id=${featured.id}`;
   if (badge && viewed[0]?.views) badge.textContent = `${viewed[0].views} visits · Pack favorite`;
 }

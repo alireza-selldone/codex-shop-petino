@@ -106,8 +106,8 @@ export function audit() {
   /* 4. palette */
   const bodyBg = getComputedStyle(document.body).backgroundColor;
   const bodyFg = getComputedStyle(document.body).color;
-  if (bodyBg !== 'rgb(233, 236, 238)') add('body-background-not-dial', bodyBg);
-  if (bodyFg !== 'rgb(22, 25, 29)') add('body-ink-not-graphite', bodyFg);
+  if (bodyBg !== 'rgb(255, 248, 238)') add('body-background-not-petino-cream', bodyBg);
+  if (bodyFg !== 'rgb(24, 51, 47)') add('body-ink-not-petino-ink', bodyFg);
 
   /* 5. no shadows on product cards */
   const shadowed = [...document.querySelectorAll('.pcard,.cat,.tier__art,.thumb,.galmain')]
@@ -123,9 +123,8 @@ export function audit() {
   const loaded = (family) =>
     [...document.fonts].some((f) => f.family === family && f.status === 'loaded');
   const fonts = {
-    bodoni: loaded('Bodoni Moda'),
-    archivo: loaded('Archivo'),
-    azeret: loaded('Azeret Mono'),
+    nunito: loaded('Nunito'),
+    dmSans: loaded('DM Sans'),
   };
   Object.entries(fonts).forEach(([k, v]) => { if (!v) add('font-not-loaded', k); });
 

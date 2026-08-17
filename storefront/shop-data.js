@@ -316,7 +316,7 @@ export function swatchStyle(color) {
 }
 
 export function swatchLabel(color) {
-  if (!color) return "Unnamed finish";
+  if (!color) return "Unnamed option";
   return isComposite(color)
     ? color.split("/").map((s) => s.trim()).join(" and ")
     : color;
@@ -480,6 +480,8 @@ export async function loadCatalog() {
       range: priceRange(p),
       icon: p.icon || "",
       image: img(p.icon),
+      image256: img(p.icon, 256),
+      image512: img(p.icon, 512),
       raw: p,
     };
   });
@@ -502,6 +504,8 @@ export async function loadCatalog() {
       from: inCat.length ? Math.min(...inCat.map((p) => p.price)) : 0,
       // Falls back to the category's own icon where no product stands in for it.
       image: hero ? hero.image : img(meta.icon),
+      image256: hero ? hero.image256 : img(meta.icon, 256),
+      image512: hero ? hero.image512 : img(meta.icon, 512),
       heroName: hero ? hero.name : meta.title || "",
     };
   }).filter((c) => c.count > 0);

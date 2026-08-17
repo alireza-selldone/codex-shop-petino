@@ -121,7 +121,7 @@ async function initPDP(cat) {
   root.innerHTML = `
   <p class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; <a href="shop.html?cat=${c.slug}">${esc(c.name)}</a> &nbsp;/&nbsp; ${esc(p.name)}</p>
   <div class="pdp">
-    <div class="gal">
+    <div class="gal${gallery.length < 2 ? " gal--single" : ""}">
       <div class="thumbs" role="group" aria-label="Gallery views"${gallery.length < 2 ? ' hidden' : ''}>
         ${gallery.map((g, i) => `
           <button class="thumb${i ? "" : " is-on"}" type="button" data-i="${i}" aria-label="View ${i + 1} of ${gallery.length}">
@@ -144,22 +144,21 @@ async function initPDP(cat) {
       <div class="pline"></div>
 
       ${showSwatches ? `
-      <p class="eyebrow mb0" style="margin-bottom:14px">Case &amp; strap</p>
+      <p class="eyebrow mb0" style="margin-bottom:14px">Available options</p>
       <div class="swatches" role="radiogroup" aria-label="Available product options">
         ${variants.map((v, i) => `
           <button class="sw${v.image ? " sw--img" : ""}${i ? "" : " is-on"}" type="button" role="radio"
                   aria-checked="${i ? "false" : "true"}"
                   data-i="${i}"
                   ${v.image ? "" : `style="${swatchStyle(v.color)}"`}
-                  aria-label="Finish ${i + 1} of ${variants.length}, ${esc(swatchLabel(v.color))}">
+                  aria-label="Option ${i + 1} of ${variants.length}, ${esc(swatchLabel(v.color))}">
             ${v.image ? `<img src="${esc(img(v.image))}" alt="" width="60" height="60" loading="lazy">
               <span class="sw__dot" aria-hidden="true" style="${swatchStyle(v.color)}"></span>` : ""}
           </button>`).join("")}
       </div>
-      <p class="swname mb0">Finish <span class="swhex" data-sw-hex>${esc(variants[0].color)}</span>${variants[0].sku ? ` <span class="swsku" data-sw-sku>${esc(variants[0].sku)}</span>` : `<span class="swsku" data-sw-sku hidden></span>`}</p>
-      <p class="swpos" data-sw-pos>Finish 1 of ${variants.length}</p>
+      <p class="swpos" data-sw-pos>Option 1 of ${variants.length}${variants[0].color ? ` · ${esc(swatchLabel(variants[0].color))}` : ""}${variants[0].sku ? ` · ${esc(variants[0].sku)}` : ""}</p>
       ` : `
-      <p class="eyebrow mb0" style="margin-bottom:8px">Case &amp; strap</p>
+      <p class="eyebrow mb0" style="margin-bottom:8px">Product option</p>
       <p class="cap" style="margin-bottom:4px">A single option is recorded for this product.</p>
       `}
 
@@ -252,14 +251,10 @@ async function initPDP(cat) {
       sw.classList.add("is-on"); sw.setAttribute("aria-checked", "true");
       const i = Number(sw.dataset.i);
       const v = variants[i];
-      const hexEl = root.querySelector("[data-sw-hex]");
       const posEl = root.querySelector("[data-sw-pos]");
-      const skuEl = root.querySelector("[data-sw-sku]");
       const priceEl = root.querySelector("[data-price]");
       const stockEl = root.querySelector("[data-stock]");
-      if (hexEl) hexEl.textContent = v.color;
-      if (posEl) posEl.textContent = `Finish ${i + 1} of ${variants.length}`;
-      if (skuEl) { skuEl.textContent = v.sku || ""; skuEl.hidden = !v.sku; }
+      if (posEl) posEl.textContent = `Option ${i + 1} of ${variants.length}${v.color ? ` · ${swatchLabel(v.color)}` : ""}${v.sku ? ` · ${v.sku}` : ""}`;
       if (priceEl) priceEl.innerHTML = `${money(priceOf(v))}${p.was ? `<s>${money(p.was)}</s>` : ""}`;
       if (stockEl) {
         const q = stockOf(v);

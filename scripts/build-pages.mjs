@@ -41,14 +41,19 @@ const TOKENS = {
   OPENING_HOURS: CFG.brand?.openingHours || "",
 };
 
-// A token the config leaves empty is treated as unfilled, not as a blank.
-for (const [k, v] of Object.entries(TOKENS)) if (!v) delete TOKENS[k];
-
 /* This shop has no real contact details. These stay visible as tokens: an
    invented address looks like a fact and cannot be told apart from a real one
    by anybody reading the page. The shop record does carry values, but they are
    demo seed data — a Los Angeles address on a shop whose country is Switzerland. */
 const UNFILLED = new Set(["SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION"]);
+
+// A token the config leaves empty is treated as unfilled, not as a blank.
+for (const [k, v] of Object.entries(TOKENS)) {
+  if (!v) {
+    delete TOKENS[k];
+    UNFILLED.add(k);
+  }
+}
 
 const PAGES = {
   "about-us": ["The house", "Who we are, how references are chosen, and what to expect after the sale."],
@@ -77,7 +82,7 @@ const inline = (t) => fill(escape(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</stro
 /* The Markdown subset the sources actually use: headings, paragraphs, bold,
    bullet lists, pipe tables, and the raw <h2 id> the footer anchors need. */
 function render(md) {
-  const lines = md.split("\n");
+  const lines = md.replace(/\r/g, "").split("\n");
   const body = [];
   let title = null, meta = null, i = 0;
 
@@ -130,6 +135,13 @@ function render(md) {
       para.push(inline(lines[i].trim()));
       i++;
     }
+    // Never leave the cursor parked on unsupported Markdown. Treat a lone
+    // special-prefixed line as text so a malformed source cannot hang builds.
+    if (!para.length) {
+      body.push(`          <p>${inline(line.trim())}</p>`);
+      i++;
+      continue;
+    }
     const text = para.join("<br>\n            ");
     if (text.startsWith("Last updated:") && meta === null) meta = text;
     else body.push(`          <p>${text}</p>`);
@@ -149,7 +161,9 @@ function chrome() {
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head — refusing to emit pages that would load it");
   // #service is a homepage section; from another page the link needs the page.
   const top = src.slice(src.indexOf("  <body>"), src.indexOf('<main id="main"')).replaceAll('href="#service"', 'href="index.html#service"');
-  return { head, top, tail: src.slice(src.indexOf("      </main>")) };
+  const mainClose = src.indexOf("</main>");
+  if (mainClose < 0) throw new Error("closing </main> not found in index.html");
+  return { head, top, tail: src.slice(mainClose) };
 }
 
 const { head, top, tail } = chrome();
