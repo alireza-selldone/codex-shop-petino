@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const fail = (msg) => {
     err.hidden = false;
     err.textContent = msg;
+    document.querySelector("[data-article]").classList.add("article--not-found");
+    document.querySelector("[data-article-body]").hidden = true;
+    document.querySelector("[data-article-cover]").hidden = true;
     document.querySelector("[data-article-title]").textContent = "Article not found";
     document.title = "Article not found — Petino";
   };
@@ -47,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return fail("This article could not be loaded from Selldone. Refresh to try again.");
   }
   if (!a) return fail("That article does not exist, or is no longer published.");
-  if (/\b(watch|horolog(?:y|ical)?|timepiece|chronograph)\b/i.test(`${a.title || ""} ${a.body || ""}`)) {
+  if (/\b(horolog(?:y|ical)?|timepiece|chronograph)\b/i.test(`${a.title || ""} ${a.body || ""}`)) {
     return fail("That article is not part of the Petino journal.");
   }
 

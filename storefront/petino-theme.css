@@ -89,3 +89,25 @@
 .petino-home.petino-shell .pet-header--orbit .iconbtn{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
 .petino-home.petino-shell .pet-header--orbit .pet-orbit-bag{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
 .petino-shell .post__placeholder{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#e6efcf,#dcebdd);font-size:64px}
+
+/* Cross-page polish: the late-loaded theme must not reintroduce geometry from
+   the old Watchino shell. */
+body.petino-home.petino-shell .page{margin-left:0;padding-left:0}
+body.petino-home.petino-shell .pet-header--orbit{border:0;background:transparent;backdrop-filter:none;box-shadow:none}
+body.petino-home.petino-shell .pet-header--orbit .pet-orbit-nav{height:70px;box-shadow:none}
+.petino-shell #listtitle{font-size:clamp(40px,4.2vw,56px);line-height:1.04}
+.petino-shell .pghead .h1{font-size:clamp(38px,4.2vw,56px);line-height:1.06}
+.petino-shell .post__art{margin-bottom:0}
+.petino-shell .post__txt{padding:22px 24px 26px;min-width:0}
+.petino-shell .post__title{font-size:22px;line-height:1.25;overflow-wrap:anywhere}
+.petino-shell .post__ex{overflow-wrap:anywhere}
+.petino-shell .article-actions{margin:32px 0 0;text-align:center}
+.petino-shell .article-back{width:auto;max-width:100%;height:48px;padding:0 22px;white-space:nowrap}
+.petino-shell .article--not-found .section{padding-top:48px}
+.petino-shell .article--not-found [data-article-error]{max-width:680px;margin:0 auto;padding:22px 24px;border:1px solid #e9e0d4;border-radius:16px;background:#fff;text-align:center;font-size:16px;line-height:1.6;color:#a23824!important}
+@media(max-width:767px){
+  body.petino-home.petino-shell .pet-header--orbit .pet-orbit-nav{height:61px}
+  .petino-shell #listtitle{font-size:clamp(36px,10vw,46px)}
+  .petino-shell .post__txt{padding:18px 18px 22px}
+  .petino-shell .post__title{font-size:21px}
+}

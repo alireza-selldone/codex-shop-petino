@@ -90,23 +90,31 @@
 .pet-btn,.pet-newsletter .sub{border-radius:var(--radius-control)}
 .pet-orbit,.pet-feature__image span{border-radius:var(--radius-pill)}
 
-/* Header polish: keep coral for the announcement only and make the navigation
-   geometry identical on every storefront route. */
-.petino-home .page{margin-left:0}
-.pet-orbit-head{
+/* One classic shell on every route. The inherited Watchino rail used to add a
+   one-sided 32/56px offset and the shell background looked like a box behind
+   the green navigation. */
+body.petino-home .page{margin-left:0;padding-left:0}
+body.petino-home .pet-orbit-head{
   padding-bottom:0;
-  background:var(--pet-cream);
-  overflow:hidden;
+  background:transparent;
+  overflow:visible;
 }
 .pet-announcement--orbit{background:var(--pet-coral-ink)}
-.pet-header--orbit{padding-block:8px}
-.petino-home .pet-header--orbit .pet-orbit-nav{
+body.petino-home .pet-header--orbit{
+  padding-block:8px;
+  border:0;
+  background:transparent;
+  backdrop-filter:none;
+  box-shadow:none;
+}
+body.petino-home .pet-header--orbit .pet-orbit-nav{
   width:min(1180px,calc(100% - 40px));
   max-width:none;
   height:70px;
   margin-inline:auto;
+  box-shadow:none;
 }
-.petino-home .pet-header--orbit .pet-orbit-bag{
+body.petino-home .pet-header--orbit .pet-orbit-bag{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -120,9 +128,36 @@
 .pet-orbit-head__ball{display:none}
 
 @media(max-width:1023px){
-  .petino-home .pet-header--orbit .pet-orbit-nav{width:min(1180px,calc(100% - 28px))}
+  body.petino-home .pet-header--orbit .pet-orbit-nav{width:min(1180px,calc(100% - 28px))}
 }
 @media(max-width:767px){
-  .petino-home .pet-header--orbit .pet-orbit-nav{height:61px}
-  .petino-home .pet-header--orbit .pet-orbit-bag{width:44px;min-width:44px;padding-inline:0}
+  body.petino-home .pet-header--orbit .pet-orbit-nav{height:61px}
+  body.petino-home .pet-header--orbit .pet-orbit-bag{width:44px;min-width:44px;padding-inline:0}
+}
+
+/* Unified, background-free hero artwork. */
+.pet-hero__grid{min-height:560px;background:#fce5d7}
+.pet-hero h1{max-width:15ch;font-size:clamp(44px,4.2vw,58px);line-height:1.38;letter-spacing:-.04em}
+.pet-hero__visual{background:transparent}
+.pet-hero__visual img{
+  inset:18px 20px 0;
+  width:calc(100% - 40px);
+  height:calc(100% - 18px);
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(0 22px 24px rgba(24,51,47,.12));
+}
+.pet-orbit--two{right:28px;bottom:28px}
+@media(min-width:1024px){
+  .pet-hero__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
+  .pet-hero__copy{padding:60px 36px 60px 60px}
+}
+@media(min-width:768px) and (max-width:1023px){
+  .pet-hero h1{font-size:clamp(44px,5.5vw,56px)}
+  .pet-hero__copy{padding:48px 24px 48px 40px}
+}
+@media(max-width:767px){
+  .pet-hero h1{font-size:clamp(40px,11vw,46px);line-height:1.38;max-width:12ch}
+  .pet-hero__visual{height:330px}
+  .pet-hero__visual img{inset:8px 14px 0;width:calc(100% - 28px);height:calc(100% - 8px)}
 }

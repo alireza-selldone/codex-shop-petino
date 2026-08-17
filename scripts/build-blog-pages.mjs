@@ -26,6 +26,8 @@ function chrome() {
   const top = src
     .slice(bodyStart, mainStart)
     .replace('class="petino-home"', 'class="petino-home petino-shell petino-content"')
+    .replace('<a class="is-active" href="index.html">Explore</a>', '<a href="index.html">Explore</a>')
+    .replace('<a href="/blog">Pet journal</a>', '<a class="is-active" href="/blog">Pet journal</a>')
     .replaceAll('href="#service"', 'href="index.html#service"')
     .replaceAll('href="#categories"', 'href="index.html#categories"');
   const mainClose = src.indexOf("</main>");
@@ -92,7 +94,7 @@ const PAGES = [
                 <img src="" alt="" width="1600" height="900">
               </div>
               <div class="prose" data-article-body></div>
-              <p style="margin-top:44px"><a class="btn btn--text" href="/blog">← All articles</a></p>
+              <p class="article-actions"><a class="btn btn--line article-back" href="/blog">← All articles</a></p>
             </div>
           </section>
         </article>
