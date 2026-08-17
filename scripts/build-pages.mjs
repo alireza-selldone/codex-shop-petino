@@ -174,7 +174,7 @@ function chrome() {
   // which shipped homepage JS onto all four content pages once already.
   const head = rawHead
     .replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "")
-    .replace('<link rel="stylesheet" href="petino-home.css">', '<link rel="stylesheet" href="petino-home.css"><link rel="stylesheet" href="petino-theme.css">');
+    .replace(/<link rel="stylesheet" href="petino-home\.css(?:\?v=[^"]+)?">/, '<link rel="stylesheet" href="petino-home.css?v=20260817e"><link rel="stylesheet" href="petino-theme.css?v=20260817e">');
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head — refusing to emit pages that would load it");
   // #service is a homepage section; from another page the link needs the page.
   const bodyStart = src.indexOf("<body");
@@ -200,6 +200,13 @@ for (const [slug, [eyebrow, desc]] of Object.entries(PAGES)) {
     .replace(/<title>.*?<\/title>/, `<title>${title} — ${TOKENS.SHOP_NAME || ""}</title>`)
     .replace(/(name="description"\s*\n\s*content=)"[^"]*"/, `$1"${desc}"`);
 
+  const pageTop = top
+    .replace('<a class="is-active" href="index.html">Explore</a>', '<a href="index.html">Explore</a>')
+    .replace(
+      '<a href="/about-us">Our story</a>',
+      slug === "about-us" ? '<a class="is-active" href="/about-us">Our story</a>' : '<a href="/about-us">Our story</a>',
+    );
+
   const metaHtml = meta ? `\n              <p class="pghead__meta">${meta}</p>` : "";
   const main = `<main id="main" tabindex="-1">
 
@@ -212,8 +219,6 @@ for (const [slug, [eyebrow, desc]] of Object.entries(PAGES)) {
           </div>
         </section>
 
-        <div class="wrap"><div class="tickrule"></div></div>
-
         <section class="section">
           <div class="wrap">
             <article class="prose">
@@ -224,7 +229,7 @@ ${body}
 
 `;
 
-  const out = `<!doctype html>\n<html lang="en">\n${pageHead}</head>\n${top}${main}${tail}`;
+  const out = `<!doctype html>\n<html lang="en">\n${pageHead}</head>\n${pageTop}${main}${tail}`;
   writeFileSync(join(OUT, `${slug}.html`), out);
   console.log(`  ${slug}.html`.padEnd(20) + `${out.length.toLocaleString().padStart(7)} bytes   unfilled tokens: ${(out.match(/class="tok"/g) || []).length}`);
 }

@@ -119,12 +119,22 @@ body.petino-home .pet-header--orbit .pet-orbit-bag{
   align-items:center;
   justify-content:center;
   flex-flow:row nowrap;
-  min-width:74px;
-  white-space:nowrap;
+  position:relative;
+  width:44px;
+  min-width:44px;
+  padding:0;
+  gap:0;
 }
-.pet-header--orbit .pet-orbit-bag>span:first-child,
+.pet-header--orbit .pet-orbit-bag>span:first-child{display:none!important}
 .pet-header--orbit .pet-orbit-bag>svg,
 .pet-header--orbit .pet-orbit-bag>.cartdot{flex:0 0 auto}
+.pet-header--orbit .pet-orbit-bag>svg{display:block;width:17px}
+.pet-header--orbit .pet-orbit-bag>.cartdot{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+}
+.pet-header--orbit .pet-orbit-bag>.cartdot:not([hidden]){display:grid!important}
 .pet-orbit-head__ball{display:none}
 
 @media(max-width:1023px){

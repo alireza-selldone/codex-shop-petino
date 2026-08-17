@@ -16,7 +16,7 @@ function chrome() {
   const rawHead = src.slice(src.indexOf("<head>"), src.indexOf("</head>"));
   const head = rawHead
     .replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "")
-    .replace('<link rel="stylesheet" href="petino-home.css">', '<link rel="stylesheet" href="petino-home.css"><link rel="stylesheet" href="petino-theme.css">');
+    .replace(/<link rel="stylesheet" href="petino-home\.css(?:\?v=[^"]+)?">/, '<link rel="stylesheet" href="petino-home.css?v=20260817e"><link rel="stylesheet" href="petino-theme.css?v=20260817e">');
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head");
   const bodyStart = src.indexOf("<body");
   const mainStart = src.indexOf('<main id="main"');
@@ -51,8 +51,6 @@ const PAGES = [
           </div>
         </section>
 
-        <div class="wrap"><div class="tickrule"></div></div>
-
         <section class="section">
           <div class="wrap">
             <nav class="chips" data-blog-cats aria-label="Filter by category"></nav>
@@ -84,8 +82,6 @@ const PAGES = [
               </div>
             </div>
           </section>
-
-          <div class="wrap"><div class="tickrule"></div></div>
 
           <section class="section">
             <div class="wrap">
