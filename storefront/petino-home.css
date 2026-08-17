@@ -89,3 +89,40 @@
 .pet-category,.pet-viewed,.pet-review,.pet-article__art{border-radius:var(--radius-card)}
 .pet-btn,.pet-newsletter .sub{border-radius:var(--radius-control)}
 .pet-orbit,.pet-feature__image span{border-radius:var(--radius-pill)}
+
+/* Header polish: keep coral for the announcement only and make the navigation
+   geometry identical on every storefront route. */
+.petino-home .page{margin-left:0}
+.pet-orbit-head{
+  padding-bottom:0;
+  background:var(--pet-cream);
+  overflow:hidden;
+}
+.pet-announcement--orbit{background:var(--pet-coral-ink)}
+.pet-header--orbit{padding-block:8px}
+.petino-home .pet-header--orbit .pet-orbit-nav{
+  width:min(1180px,calc(100% - 40px));
+  max-width:none;
+  height:70px;
+  margin-inline:auto;
+}
+.petino-home .pet-header--orbit .pet-orbit-bag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-flow:row nowrap;
+  min-width:74px;
+  white-space:nowrap;
+}
+.pet-header--orbit .pet-orbit-bag>span:first-child,
+.pet-header--orbit .pet-orbit-bag>svg,
+.pet-header--orbit .pet-orbit-bag>.cartdot{flex:0 0 auto}
+.pet-orbit-head__ball{display:none}
+
+@media(max-width:1023px){
+  .petino-home .pet-header--orbit .pet-orbit-nav{width:min(1180px,calc(100% - 28px))}
+}
+@media(max-width:767px){
+  .petino-home .pet-header--orbit .pet-orbit-nav{height:61px}
+  .petino-home .pet-header--orbit .pet-orbit-bag{width:44px;min-width:44px;padding-inline:0}
+}
