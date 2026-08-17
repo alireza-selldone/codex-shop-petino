@@ -157,6 +157,79 @@ body.petino-home .pet-header--orbit .pet-orbit-bag{
   object-position:center bottom;
   filter:drop-shadow(0 22px 24px rgba(24,51,47,.12));
 }
+
+/* Selldone platform credit and persisted five-colour theme picker. */
+html[data-petino-theme="coral"]{--pet-ink:#18332f;--pet-coral:#f47458;--pet-coral-ink:#c2462c;--pet-cream:#fff8ee;--pet-sage:#dcebdd;--pet-teal:#257b73;--pet-yellow:#f6c95d;--pet-line:#e9e0d4;--pet-muted:#6b7975}
+html[data-petino-theme="ocean"]{--pet-ink:#16324a;--pet-coral:#5e96db;--pet-coral-ink:#2f6fbe;--pet-cream:#f6f9fd;--pet-sage:#dbeaf7;--pet-teal:#245d88;--pet-yellow:#f2c85b;--pet-line:#dbe4ed;--pet-muted:#60717f}
+html[data-petino-theme="forest"]{--pet-ink:#17372b;--pet-coral:#55a37d;--pet-coral-ink:#287453;--pet-cream:#f7faf5;--pet-sage:#dcebdd;--pet-teal:#28654f;--pet-yellow:#e5bd55;--pet-line:#dce6dd;--pet-muted:#61746a}
+html[data-petino-theme="plum"]{--pet-ink:#35263f;--pet-coral:#a17ac8;--pet-coral-ink:#7952ad;--pet-cream:#fbf8fd;--pet-sage:#eadff1;--pet-teal:#664879;--pet-yellow:#efbf58;--pet-line:#e8deec;--pet-muted:#74667a}
+html[data-petino-theme="amber"]{--pet-ink:#3e2f20;--pet-coral:#d58b3c;--pet-coral-ink:#a96218;--pet-cream:#fffaf2;--pet-sage:#efe4cc;--pet-teal:#765c35;--pet-yellow:#e5b946;--pet-line:#eadfce;--pet-muted:#776b5c}
+
+.pet-platformbar{
+  position:relative;
+  z-index:70;
+  display:grid;
+  place-items:center;
+  width:100%;
+  height:40px;
+  border-bottom:1px solid rgba(24,51,47,.035);
+  background:#fffaf3;
+  color:#181519;
+  font:500 15px/1 "DM Sans",sans-serif;
+}
+.pet-platformbar__credit{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;margin:0;white-space:nowrap}
+.pet-platformbar__heart{color:#e21d32;font-size:16px;line-height:1;transform:translateY(-1px)}
+.pet-platformbar__credit a{display:inline-flex;align-items:center;min-height:44px;color:#7138e8;font-weight:700;text-decoration:none}
+.pet-platformbar__credit a:hover{text-decoration:underline;text-underline-offset:3px}
+.pet-theme-picker{position:absolute;right:max(18px,calc((100vw - 1340px)/2));top:-2px}
+.pet-theme-picker__toggle{
+  position:relative;isolation:isolate;display:flex;align-items:center;gap:8px;height:44px;padding:0 10px;
+  border:0;background:transparent;color:#2c292b;
+  font:600 12px/1 "DM Sans",sans-serif;cursor:pointer;
+}
+.pet-theme-picker__toggle::before{content:"";position:absolute;z-index:-1;inset:7px 0;border:1px solid #e4d7d1;border-radius:999px;background:#fffdfb}
+.pet-theme-picker__toggle:hover::before,.pet-theme-picker__toggle[aria-expanded="true"]::before{border-color:#cbb9b1;background:#fff}
+.pet-theme-picker__toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7}
+.pet-theme-picker__swatch{display:block;width:14px;height:14px;flex:0 0 auto;border-radius:50%;background:var(--swatch,var(--pet-coral-ink));box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.pet-theme-picker__menu{
+  position:absolute;top:42px;right:0;width:154px;padding:6px;border:1px solid #eadfd9;
+  border-radius:16px;background:#fff;box-shadow:0 16px 36px rgba(44,35,31,.14);
+}
+.pet-theme-picker__menu[hidden]{display:none}
+.pet-theme-picker__menu button{
+  display:grid;grid-template-columns:18px 1fr 16px;align-items:center;gap:7px;width:100%;height:36px;padding:0 9px;
+  border:0;border-radius:10px;background:transparent;color:#302b2d;text-align:left;font:600 12px/1 "DM Sans",sans-serif;cursor:pointer;
+}
+.pet-theme-picker__menu button:hover,.pet-theme-picker__menu button:focus-visible{background:#faf4ef;outline:0}
+.pet-theme-picker__menu button svg{width:15px;height:15px;fill:none;stroke:transparent;stroke-width:2}
+.pet-theme-picker__menu button.is-selected svg{stroke:#201d1e}
+
+html[data-petino-theme] body.petino-home,html[data-petino-theme] body.petino-shell{background:var(--pet-cream);color:var(--pet-ink)}
+html[data-petino-theme] .pet-orbit-head,html[data-petino-theme] .pet-announcement--orbit{background:var(--pet-coral-ink)}
+html[data-petino-theme] .pet-header--orbit .pet-orbit-nav{background:var(--pet-ink)}
+html[data-petino-theme] .pet-logo__mark,html[data-petino-theme] .pet-btn--primary,html[data-petino-theme] .pet-newsletter .sub button{background:var(--pet-coral-ink)}
+html[data-petino-theme] .pet-hero h1 em,html[data-petino-theme] .pet-review-summary{color:var(--pet-coral-ink)}
+html[data-petino-theme] .pet-header--orbit .pet-logo__dot{color:var(--pet-yellow)}
+html[data-petino-theme] .petino-shell .pet-mark{background:var(--pet-coral-ink)}
+html[data-petino-theme] .petino-shell .pet-dot{color:var(--pet-coral-ink)}
+html[data-petino-theme] .pet-feature__grid,html[data-petino-theme] .pet-footer-note__signup{background:var(--pet-coral-ink)}
+html[data-petino-theme] .pet-newsletter{background:var(--pet-teal)}
+html[data-petino-theme] .pet-footer--note,html[data-petino-theme] .petino-shell .pghead{background:var(--pet-cream)}
+html[data-petino-theme] .petino-shell .pghead.ink{background:var(--pet-sage)}
+html[data-petino-theme] .petino-shell .h1,html[data-petino-theme] .petino-shell .h2,html[data-petino-theme] .petino-shell .h3{color:var(--pet-ink)}
+html[data-petino-theme] .petino-shell .chip.is-on{border-color:var(--pet-teal);background:var(--pet-teal)}
+html[data-petino-theme] .petino-shell .btn--full,html[data-petino-theme] .petino-shell .btn:not(.btn--line):not(.btn--text){background:var(--pet-coral-ink)}
+html[data-petino-theme] .petino-shell .cohdr{background:var(--pet-cream)}
+html[data-petino-theme] .petino-shell .step.is-on .step__n,html[data-petino-theme] .petino-shell .step.is-done .step__n{border-color:var(--pet-teal);background:var(--pet-teal)}
+
+@media(max-width:600px){
+  .pet-platformbar{height:40px;font-size:13px}
+  .pet-theme-picker{right:5px}
+  .pet-theme-picker__toggle{width:44px;justify-content:center;padding:0;gap:3px}
+  .pet-theme-picker__toggle [data-theme-current]{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .pet-theme-picker__toggle svg{width:12px}
+  .pet-theme-picker__menu{right:0}
+}
 .pet-orbit--two{right:28px;bottom:28px}
 @media(min-width:1024px){
   .pet-hero__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
