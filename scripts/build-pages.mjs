@@ -174,7 +174,7 @@ function chrome() {
   // which shipped homepage JS onto all four content pages once already.
   const head = rawHead
     .replace(/[ \t]*<script type="module" src="home\.js"><\/script>\r?\n/, "")
-    .replace(/<link rel="stylesheet" href="petino-home\.css(?:\?v=[^"]+)?">/, '<link rel="stylesheet" href="petino-home.css?v=20260817f"><link rel="stylesheet" href="petino-theme.css?v=20260817f">');
+    .replace(/<link rel="stylesheet" href="petino-home\.css(?:\?v=[^"]+)?">/, '<link rel="stylesheet" href="petino-home.css?v=20260818a"><link rel="stylesheet" href="petino-theme.css?v=20260818a">');
   if (head === rawHead) throw new Error("home.js script tag not found in index.html head — refusing to emit pages that would load it");
   // #service is a homepage section; from another page the link needs the page.
   const bodyStart = src.indexOf("<body");

@@ -86,6 +86,7 @@
 .pet-kicker,.pet-view-count,.pet-category small,.pet-articles small,.pet-articles b,
 .pet-review-summary small,.pet-review figcaption,.pet-footer-note__bottom,.pet-footer--note small{font-size:13px}
 .pet-hero__grid,.pet-feature__grid{border-radius:var(--radius-panel)}
+.pet-feature__grid{padding:0}
 .pet-category,.pet-viewed,.pet-review,.pet-article__art{border-radius:var(--radius-card)}
 .pet-btn,.pet-newsletter .sub{border-radius:var(--radius-control)}
 .pet-orbit,.pet-feature__image span{border-radius:var(--radius-pill)}
